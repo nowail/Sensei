@@ -1,0 +1,563 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXContainerItemProxy section */
+		D75EFCD42EDCC56C005B936F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D75EFCB62EDCC56A005B936F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D75EFCBD2EDCC56A005B936F;
+			remoteInfo = Sensei;
+		};
+		D75EFCDE2EDCC56C005B936F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D75EFCB62EDCC56A005B936F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D75EFCBD2EDCC56A005B936F;
+			remoteInfo = Sensei;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		D75EFCBE2EDCC56A005B936F /* Sensei.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sensei.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D75EFCD32EDCC56C005B936F /* SenseiTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SenseiTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D75EFCDD2EDCC56C005B936F /* SenseiUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SenseiUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		D75EFCC02EDCC56A005B936F /* Sensei */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Sensei;
+			sourceTree = "<group>";
+		};
+		D75EFCD62EDCC56C005B936F /* SenseiTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = SenseiTests;
+			sourceTree = "<group>";
+		};
+		D75EFCE02EDCC56C005B936F /* SenseiUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = SenseiUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D75EFCBB2EDCC56A005B936F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D75EFCD02EDCC56C005B936F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D75EFCDA2EDCC56C005B936F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		D75EFCB52EDCC56A005B936F = {
+			isa = PBXGroup;
+			children = (
+				D75EFCC02EDCC56A005B936F /* Sensei */,
+				D75EFCD62EDCC56C005B936F /* SenseiTests */,
+				D75EFCE02EDCC56C005B936F /* SenseiUITests */,
+				D75EFCBF2EDCC56A005B936F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D75EFCBF2EDCC56A005B936F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D75EFCBE2EDCC56A005B936F /* Sensei.app */,
+				D75EFCD32EDCC56C005B936F /* SenseiTests.xctest */,
+				D75EFCDD2EDCC56C005B936F /* SenseiUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D75EFCBD2EDCC56A005B936F /* Sensei */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D75EFCE72EDCC56C005B936F /* Build configuration list for PBXNativeTarget "Sensei" */;
+			buildPhases = (
+				D75EFCBA2EDCC56A005B936F /* Sources */,
+				D75EFCBB2EDCC56A005B936F /* Frameworks */,
+				D75EFCBC2EDCC56A005B936F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				D75EFCC02EDCC56A005B936F /* Sensei */,
+			);
+			name = Sensei;
+			packageProductDependencies = (
+			);
+			productName = Sensei;
+			productReference = D75EFCBE2EDCC56A005B936F /* Sensei.app */;
+			productType = "com.apple.product-type.application";
+		};
+		D75EFCD22EDCC56C005B936F /* SenseiTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D75EFCEA2EDCC56C005B936F /* Build configuration list for PBXNativeTarget "SenseiTests" */;
+			buildPhases = (
+				D75EFCCF2EDCC56C005B936F /* Sources */,
+				D75EFCD02EDCC56C005B936F /* Frameworks */,
+				D75EFCD12EDCC56C005B936F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D75EFCD52EDCC56C005B936F /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				D75EFCD62EDCC56C005B936F /* SenseiTests */,
+			);
+			name = SenseiTests;
+			packageProductDependencies = (
+			);
+			productName = SenseiTests;
+			productReference = D75EFCD32EDCC56C005B936F /* SenseiTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		D75EFCDC2EDCC56C005B936F /* SenseiUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D75EFCED2EDCC56C005B936F /* Build configuration list for PBXNativeTarget "SenseiUITests" */;
+			buildPhases = (
+				D75EFCD92EDCC56C005B936F /* Sources */,
+				D75EFCDA2EDCC56C005B936F /* Frameworks */,
+				D75EFCDB2EDCC56C005B936F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D75EFCDF2EDCC56C005B936F /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				D75EFCE02EDCC56C005B936F /* SenseiUITests */,
+			);
+			name = SenseiUITests;
+			packageProductDependencies = (
+			);
+			productName = SenseiUITests;
+			productReference = D75EFCDD2EDCC56C005B936F /* SenseiUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D75EFCB62EDCC56A005B936F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1620;
+				LastUpgradeCheck = 1620;
+				TargetAttributes = {
+					D75EFCBD2EDCC56A005B936F = {
+						CreatedOnToolsVersion = 16.2;
+					};
+					D75EFCD22EDCC56C005B936F = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = D75EFCBD2EDCC56A005B936F;
+					};
+					D75EFCDC2EDCC56C005B936F = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = D75EFCBD2EDCC56A005B936F;
+					};
+				};
+			};
+			buildConfigurationList = D75EFCB92EDCC56A005B936F /* Build configuration list for PBXProject "Sensei" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = D75EFCB52EDCC56A005B936F;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = D75EFCBF2EDCC56A005B936F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D75EFCBD2EDCC56A005B936F /* Sensei */,
+				D75EFCD22EDCC56C005B936F /* SenseiTests */,
+				D75EFCDC2EDCC56C005B936F /* SenseiUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		D75EFCBC2EDCC56A005B936F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D75EFCD12EDCC56C005B936F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D75EFCDB2EDCC56C005B936F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D75EFCBA2EDCC56A005B936F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D75EFCCF2EDCC56C005B936F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D75EFCD92EDCC56C005B936F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D75EFCD52EDCC56C005B936F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D75EFCBD2EDCC56A005B936F /* Sensei */;
+			targetProxy = D75EFCD42EDCC56C005B936F /* PBXContainerItemProxy */;
+		};
+		D75EFCDF2EDCC56C005B936F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D75EFCBD2EDCC56A005B936F /* Sensei */;
+			targetProxy = D75EFCDE2EDCC56C005B936F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		D75EFCE52EDCC56C005B936F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		D75EFCE62EDCC56C005B936F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		D75EFCE82EDCC56C005B936F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Sensei/Preview Content\"";
+				DEVELOPMENT_TEAM = 3AN3P7NB8V;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pehlaj.Sensei;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D75EFCE92EDCC56C005B936F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Sensei/Preview Content\"";
+				DEVELOPMENT_TEAM = 3AN3P7NB8V;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pehlaj.Sensei;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		D75EFCEB2EDCC56C005B936F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3AN3P7NB8V;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pehlaj.SenseiTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Sensei.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Sensei";
+			};
+			name = Debug;
+		};
+		D75EFCEC2EDCC56C005B936F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3AN3P7NB8V;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pehlaj.SenseiTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Sensei.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Sensei";
+			};
+			name = Release;
+		};
+		D75EFCEE2EDCC56C005B936F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3AN3P7NB8V;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pehlaj.SenseiUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Sensei;
+			};
+			name = Debug;
+		};
+		D75EFCEF2EDCC56C005B936F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3AN3P7NB8V;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pehlaj.SenseiUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Sensei;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		D75EFCB92EDCC56A005B936F /* Build configuration list for PBXProject "Sensei" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D75EFCE52EDCC56C005B936F /* Debug */,
+				D75EFCE62EDCC56C005B936F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D75EFCE72EDCC56C005B936F /* Build configuration list for PBXNativeTarget "Sensei" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D75EFCE82EDCC56C005B936F /* Debug */,
+				D75EFCE92EDCC56C005B936F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D75EFCEA2EDCC56C005B936F /* Build configuration list for PBXNativeTarget "SenseiTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D75EFCEB2EDCC56C005B936F /* Debug */,
+				D75EFCEC2EDCC56C005B936F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D75EFCED2EDCC56C005B936F /* Build configuration list for PBXNativeTarget "SenseiUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D75EFCEE2EDCC56C005B936F /* Debug */,
+				D75EFCEF2EDCC56C005B936F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D75EFCB62EDCC56A005B936F /* Project object */;
+}
