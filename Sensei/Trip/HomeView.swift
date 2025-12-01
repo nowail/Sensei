@@ -1,7 +1,14 @@
 import SwiftUI
 
+enum NavigationDestination: Hashable {
+    case newTrip
+    case tripChat(Trip)
+}
+
 struct HomeView: View {
     let userName: String
+    @StateObject private var tripStore = TripStore()
+    @State private var navigationPath = NavigationPath()
     
     // Colors
     let bgGradient = LinearGradient(
@@ -16,7 +23,7 @@ struct HomeView: View {
     let glowGreen = Color(#colorLiteral(red: 0.40, green: 0.80, blue: 0.65, alpha: 1))
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $navigationPath) {
             ZStack {
                 bgGradient.ignoresSafeArea()
                 
@@ -30,25 +37,41 @@ struct HomeView: View {
                             .padding(.top, 20)
                         
                         // MARK: - Start New Trip Card
-                        NavigationLink(destination: NewTripView()) {
+                        Button {
+                            navigationPath.append(NavigationDestination.newTrip)
+                        } label: {
                             startTripCard
                         }
                         
                         // MARK: - Ongoing Trips
-                        Text("Ongoing Trips")
-                            .font(.system(size: 20, weight: .semibold))
-                            .foregroundColor(.white.opacity(0.8))
-                        
-                        ongoingTripCard(title: "Naran Valley Trip", spent: "92,100", owe: "2,300")
+                        if !tripStore.ongoingTrips.isEmpty {
+                            Text("Ongoing Trips")
+                                .font(.system(size: 20, weight: .semibold))
+                                .foregroundColor(.white.opacity(0.8))
+                            
+                            ForEach(tripStore.ongoingTrips) { trip in
+                                Button {
+                                    navigationPath.append(NavigationDestination.tripChat(trip))
+                                } label: {
+                                    ongoingTripCardView(trip: trip)
+                                }
+                            }
+                        }
                         
                         // MARK: - Past Trips
-                        Text("Past Trips")
-                            .font(.system(size: 20, weight: .semibold))
-                            .foregroundColor(.white.opacity(0.8))
-                        
-                        pastTripRow(name: "Turkey Trip 🇹🇷")
-                        pastTripRow(name: "Skardu Adventure ⛰️")
-                        pastTripRow(name: "Murree Weekend 🌲")
+                        if !tripStore.pastTrips.isEmpty {
+                            Text("Past Trips")
+                                .font(.system(size: 20, weight: .semibold))
+                                .foregroundColor(.white.opacity(0.8))
+                            
+                            ForEach(tripStore.pastTrips) { trip in
+                                Button {
+                                    navigationPath.append(NavigationDestination.tripChat(trip))
+                                } label: {
+                                    pastTripRow(name: trip.name)
+                                }
+                            }
+                        }
                         
                         // MARK: - AI Suggestions
                         aiSuggestionBox
@@ -56,6 +79,14 @@ struct HomeView: View {
                         Spacer().frame(height: 40)
                     }
                     .padding(.horizontal, 20)
+                }
+            }
+            .navigationDestination(for: NavigationDestination.self) { destination in
+                switch destination {
+                case .newTrip:
+                    NewTripView(tripStore: tripStore, navigationPath: $navigationPath)
+                case .tripChat(let trip):
+                    TripChatView(trip: trip, tripStore: tripStore, navigationPath: $navigationPath)
                 }
             }
         }
@@ -112,6 +143,44 @@ extension HomeView {
         .background(cardColor)
         .cornerRadius(16)
         .shadow(color: .black.opacity(0.2), radius: 10, y: 4)
+    }
+    
+    // MARK: Card — Ongoing Trip View
+    func ongoingTripCardView(trip: Trip) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(trip.name)
+                .foregroundColor(.white)
+                .font(.system(size: 18, weight: .medium))
+            
+            HStack(spacing: 12) {
+                if trip.messageCount > 0 {
+                    Text("\(trip.messageCount) messages")
+                        .foregroundColor(.white.opacity(0.7))
+                        .font(.system(size: 14))
+                }
+                
+                if let lastMessageDate = trip.lastMessageDate {
+                    Text(formatDate(lastMessageDate))
+                        .foregroundColor(.white.opacity(0.5))
+                        .font(.system(size: 12))
+                }
+            }
+            
+            Text("\(trip.members.count) members")
+                .foregroundColor(glowGreen.opacity(0.8))
+                .font(.system(size: 14, weight: .medium))
+        }
+        .padding()
+        .background(cardColor)
+        .cornerRadius(16)
+        .shadow(color: .black.opacity(0.2), radius: 10, y: 4)
+    }
+    
+    func formatDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        formatter.timeStyle = .short
+        return formatter.string(from: date)
     }
     
     // MARK: Past Trip Row

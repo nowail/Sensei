@@ -1,7 +1,53 @@
-//
-//  TripStore.swift
-//  Sensei
-//
-//  Created by Dev on 01/12/2025.
-//
+import Foundation
+import Combine
 
+class TripStore: ObservableObject {
+    @Published var trips: [Trip] = []
+    
+    private let userDefaultsKey = "SavedTrips"
+    
+    init() {
+        loadTrips()
+    }
+    
+    func addTrip(_ trip: Trip) {
+        trips.append(trip)
+        saveTrips()
+    }
+    
+    func updateTrip(_ trip: Trip) {
+        if let index = trips.firstIndex(where: { $0.id == trip.id }) {
+            trips[index] = trip
+            saveTrips()
+        }
+    }
+    
+    func addMessageToTrip(tripId: UUID) {
+        if let index = trips.firstIndex(where: { $0.id == tripId }) {
+            trips[index].messageCount += 1
+            trips[index].lastMessageDate = Date()
+            saveTrips()
+        }
+    }
+    
+    var ongoingTrips: [Trip] {
+        trips.filter { $0.isOngoing && !$0.isPast }
+    }
+    
+    var pastTrips: [Trip] {
+        trips.filter { $0.isPast }
+    }
+    
+    private func saveTrips() {
+        if let encoded = try? JSONEncoder().encode(trips) {
+            UserDefaults.standard.set(encoded, forKey: userDefaultsKey)
+        }
+    }
+    
+    private func loadTrips() {
+        if let data = UserDefaults.standard.data(forKey: userDefaultsKey),
+           let decoded = try? JSONDecoder().decode([Trip].self, from: data) {
+            trips = decoded
+        }
+    }
+}

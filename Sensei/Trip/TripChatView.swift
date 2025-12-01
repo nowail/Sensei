@@ -4,8 +4,9 @@ import PhotosUI
 
 struct TripChatView: View {
     
-    let tripName: String
-    let members: [String]
+    let trip: Trip
+    @ObservedObject var tripStore: TripStore
+    @Binding var navigationPath: NavigationPath
     
     @State private var messages: [ChatMessage] = []
     @State private var inputText: String = ""
@@ -14,59 +15,121 @@ struct TripChatView: View {
     @State private var audioRecorder: AVAudioRecorder?
     @State private var isRecording = false
     
+    let cardColor = Color(#colorLiteral(red: 0.10, green: 0.15, blue: 0.13, alpha: 1))
+    let accentGreen = Color(#colorLiteral(red: 0.40, green: 0.80, blue: 0.65, alpha: 1))
+    
     var body: some View {
         ZStack {
-            Color.black.ignoresSafeArea()
+            // Background gradient
+            LinearGradient(
+                colors: [
+                    Color(#colorLiteral(red: 0.02, green: 0.05, blue: 0.04, alpha: 1)),
+                    Color(#colorLiteral(red: 0.07, green: 0.12, blue: 0.11, alpha: 1))
+                ],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea()
             
-            VStack {
+            VStack(spacing: 0) {
                 
                 // HEADER
-                Text(tripName)
-                    .font(.system(size: 20, weight: .bold))
-                    .foregroundColor(.white)
-                    .padding(.vertical, 12)
+                VStack(spacing: 4) {
+                    Text(trip.name)
+                        .font(.system(size: 20, weight: .bold))
+                        .foregroundColor(.white)
+                    
+                    Text("\(trip.members.count) members")
+                        .font(.system(size: 14))
+                        .foregroundColor(.white.opacity(0.6))
+                }
+                .padding(.vertical, 16)
+                .frame(maxWidth: .infinity)
+                .background(cardColor.opacity(0.5))
                 
-                ScrollView {
-                    VStack(spacing: 16) {
-                        ForEach(messages) { msg in
-                            MessageBubble(message: msg)
+                // MESSAGES
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        VStack(spacing: 12) {
+                            if messages.isEmpty {
+                                VStack(spacing: 12) {
+                                    Image(systemName: "message.fill")
+                                        .font(.system(size: 48))
+                                        .foregroundColor(.white.opacity(0.3))
+                                    Text("No messages yet")
+                                        .foregroundColor(.white.opacity(0.5))
+                                        .font(.system(size: 16))
+                                    Text("Start the conversation!")
+                                        .foregroundColor(.white.opacity(0.4))
+                                        .font(.system(size: 14))
+                                }
+                                .padding(.top, 60)
+                            }
+                            
+                            ForEach(messages) { msg in
+                                MessageBubble(message: msg)
+                                    .id(msg.id)
+                            }
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 20)
+                    }
+                    .onChange(of: messages.count) { _ in
+                        if let lastMessage = messages.last {
+                            withAnimation {
+                                proxy.scrollTo(lastMessage.id, anchor: .bottom)
+                            }
                         }
                     }
-                    .padding()
                 }
                 
                 // MESSAGE INPUT BAR
-                HStack(spacing: 12) {
+                VStack(spacing: 0) {
+                    Divider()
+                        .background(Color.white.opacity(0.1))
                     
-                    // Camera button
-                    Button(action: { showImagePicker = true }) {
-                        Image(systemName: "camera.fill")
+                    HStack(spacing: 12) {
+                        // Camera button
+                        Button(action: { showImagePicker = true }) {
+                            Image(systemName: "camera.fill")
+                                .foregroundColor(.white.opacity(0.8))
+                                .font(.system(size: 22))
+                                .frame(width: 40, height: 40)
+                        }
+                        
+                        // Mic button
+                        Button(action: toggleRecording) {
+                            Image(systemName: isRecording ? "stop.circle.fill" : "mic.fill")
+                                .foregroundColor(isRecording ? .red : .white.opacity(0.8))
+                                .font(.system(size: 22))
+                                .frame(width: 40, height: 40)
+                        }
+                        
+                        // TextField
+                        TextField("Type an expense note…", text: $inputText)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 12)
+                            .background(cardColor)
+                            .cornerRadius(24)
                             .foregroundColor(.white)
-                            .font(.system(size: 22))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 24)
+                                    .stroke(Color.white.opacity(0.1), lineWidth: 1)
+                            )
+                        
+                        // Send button
+                        Button(action: sendTextMessage) {
+                            Image(systemName: "paperplane.fill")
+                                .foregroundColor(inputText.isEmpty ? .white.opacity(0.3) : accentGreen)
+                                .font(.system(size: 22))
+                                .frame(width: 40, height: 40)
+                        }
+                        .disabled(inputText.isEmpty)
                     }
-                    
-                    // Mic button
-                    Button(action: toggleRecording) {
-                        Image(systemName: isRecording ? "stop.circle.fill" : "mic.fill")
-                            .foregroundColor(isRecording ? .red : .white)
-                            .font(.system(size: 22))
-                    }
-                    
-                    // TextField
-                    TextField("Type an expense note…", text: $inputText)
-                        .padding(12)
-                        .background(Color.white.opacity(0.10))
-                        .cornerRadius(20)
-                        .foregroundColor(.white)
-                    
-                    // Send button
-                    Button(action: sendTextMessage) {
-                        Image(systemName: "paperplane.fill")
-                            .foregroundColor(.white)
-                            .font(.system(size: 22))
-                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
+                    .background(cardColor.opacity(0.3))
                 }
-                .padding()
             }
         }
         .sheet(isPresented: $showImagePicker) {
@@ -80,11 +143,15 @@ struct TripChatView: View {
         
         messages.append(ChatMessage(type: .text(inputText)))
         inputText = ""
+        
+        // Add to ongoing trips when message is sent
+        tripStore.addMessageToTrip(tripId: trip.id)
     }
     
     // HANDLE IMAGE MESSAGE
     func handleImageMessage(_ img: UIImage) {
         messages.append(ChatMessage(type: .image(img)))
+        tripStore.addMessageToTrip(tripId: trip.id)
     }
     
     // AUDIO RECORDING
@@ -121,6 +188,7 @@ struct TripChatView: View {
         
         if let url = audioRecorder?.url {
             messages.append(ChatMessage(type: .audio(url)))
+            tripStore.addMessageToTrip(tripId: trip.id)
         }
     }
 }

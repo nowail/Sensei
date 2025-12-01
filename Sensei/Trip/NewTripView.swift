@@ -3,12 +3,17 @@ import ContactsUI
 
 struct NewTripView: View {
     
+    @Environment(\.dismiss) var dismiss
+    @ObservedObject var tripStore: TripStore
+    @Binding var navigationPath: NavigationPath
+    
     @State private var tripName: String = ""
     @State private var newMemberName: String = ""
     @State private var members: [String] = []
+    @State private var startDate: Date = Date()
+    @State private var endDate: Date = Calendar.current.date(byAdding: .day, value: 7, to: Date()) ?? Date()
     
     @State private var showContactPicker = false
-    @State private var goToChat = false   // For navigation
     
     let cardColor = Color(#colorLiteral(red: 0.10, green: 0.15, blue: 0.13, alpha: 1))
     let accentGreen = Color(#colorLiteral(red: 0.40, green: 0.80, blue: 0.65, alpha: 1))
@@ -48,6 +53,41 @@ struct NewTripView: View {
                                 RoundedRectangle(cornerRadius: 14)
                                     .stroke(Color.white.opacity(0.08), lineWidth: 1)
                             )
+                    }
+                    
+                    // DATE PICKERS
+                    VStack(alignment: .leading, spacing: 16) {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Start Date")
+                                .foregroundColor(.white.opacity(0.7))
+                            
+                            HStack {
+                                DatePicker("", selection: $startDate, displayedComponents: .date)
+                                    .datePickerStyle(.compact)
+                                    .labelsHidden()
+                                    .colorScheme(.dark)
+                                Spacer()
+                            }
+                            .padding()
+                            .background(cardColor)
+                            .cornerRadius(14)
+                        }
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("End Date")
+                                .foregroundColor(.white.opacity(0.7))
+                            
+                            HStack {
+                                DatePicker("", selection: $endDate, in: startDate..., displayedComponents: .date)
+                                    .datePickerStyle(.compact)
+                                    .labelsHidden()
+                                    .colorScheme(.dark)
+                                Spacer()
+                            }
+                            .padding()
+                            .background(cardColor)
+                            .cornerRadius(14)
+                        }
                     }
                     
                     // MEMBERS SECTION
@@ -111,7 +151,19 @@ struct NewTripView: View {
                     
                     // CREATE TRIP BUTTON — CLEAN + WORKING
                     Button {
-                        goToChat = true
+                        let newTrip = Trip(
+                            name: tripName,
+                            members: members,
+                            startDate: startDate,
+                            endDate: endDate
+                        )
+                        tripStore.addTrip(newTrip)
+                        // Remove NewTripView from path and add TripChatView
+                        // This ensures we don't go back to NewTripView
+                        if !navigationPath.isEmpty {
+                            navigationPath.removeLast()
+                        }
+                        navigationPath.append(NavigationDestination.tripChat(newTrip))
                     } label: {
                         Text("Create Trip")
                             .font(.system(size: 18, weight: .bold))
@@ -125,12 +177,6 @@ struct NewTripView: View {
                     .disabled(tripName.isEmpty || members.isEmpty)
                     .opacity(tripName.isEmpty || members.isEmpty ? 0.4 : 1)
                     .padding(.top, 10)
-                    
-                    // Navigation to chat screen
-                    NavigationLink(
-                        destination: TripChatView(tripName: tripName, members: members),
-                        isActive: $goToChat
-                    ) { EmptyView() }
                 }
                 .padding(.horizontal, 20)
             }
