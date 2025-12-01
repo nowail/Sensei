@@ -23,6 +23,10 @@
 
     <key>UILaunchScreen</key>
     <dict/>
+    
+    
+    <key>NSContactsUsageDescription</key>
+    <string>This app uses your contacts to add trip members.</string>
 
     <!-- REQUIRED by Google Sign-In (CLIENT_ID from GoogleService-Info.plist) -->
     <key>GIDClientID</key>

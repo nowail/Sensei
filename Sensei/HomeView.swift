@@ -30,7 +30,9 @@ struct HomeView: View {
                             .padding(.top, 20)
                         
                         // MARK: - Start New Trip Card
-                        startTripCard
+                        NavigationLink(destination: NewTripView()) {
+                            startTripCard
+                        }
                         
                         // MARK: - Ongoing Trips
                         Text("Ongoing Trips")
