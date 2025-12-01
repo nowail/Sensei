@@ -44,9 +44,23 @@
 		F6F54EBC931883958AD81D0F /* Pods-Sensei-SenseiUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Sensei-SenseiUITests.release.xcconfig"; path = "Target Support Files/Pods-Sensei-SenseiUITests/Pods-Sensei-SenseiUITests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		D7AE570D2EDDD61F00672841 /* Exceptions for "Sensei" folder in "Sensei" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+				Untitled.swift,
+			);
+			target = D75EFCBD2EDCC56A005B936F /* Sensei */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		D75EFCC02EDCC56A005B936F /* Sensei */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				D7AE570D2EDDD61F00672841 /* Exceptions for "Sensei" folder in "Sensei" target */,
+			);
 			path = Sensei;
 			sourceTree = "<group>";
 		};
@@ -545,7 +559,8 @@
 				DEVELOPMENT_TEAM = 3AN3P7NB8V;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				GENERATE_INFOPLIST_FILE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Sensei/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -576,7 +591,8 @@
 				DEVELOPMENT_TEAM = 3AN3P7NB8V;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
-				GENERATE_INFOPLIST_FILE = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Sensei/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
