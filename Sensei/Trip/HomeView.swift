@@ -45,10 +45,10 @@ struct HomeView: View {
                         
                         // MARK: - Ongoing Trips
                         if !tripStore.ongoingTrips.isEmpty {
-                            Text("Ongoing Trips")
-                                .font(.system(size: 20, weight: .semibold))
-                                .foregroundColor(.white.opacity(0.8))
-                            
+                        Text("Ongoing Trips")
+                            .font(.system(size: 20, weight: .semibold))
+                            .foregroundColor(.white.opacity(0.8))
+                        
                             ForEach(tripStore.ongoingTrips) { trip in
                                 Button {
                                     navigationPath.append(NavigationDestination.tripChat(trip))
@@ -60,10 +60,10 @@ struct HomeView: View {
                         
                         // MARK: - Past Trips
                         if !tripStore.pastTrips.isEmpty {
-                            Text("Past Trips")
-                                .font(.system(size: 20, weight: .semibold))
-                                .foregroundColor(.white.opacity(0.8))
-                            
+                        Text("Past Trips")
+                            .font(.system(size: 20, weight: .semibold))
+                            .foregroundColor(.white.opacity(0.8))
+                        
                             ForEach(tripStore.pastTrips) { trip in
                                 Button {
                                     navigationPath.append(NavigationDestination.tripChat(trip))

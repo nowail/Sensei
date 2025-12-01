@@ -48,8 +48,8 @@ struct TripChatView: View {
                 // HEADER
                 VStack(spacing: 4) {
                     Text(trip.name)
-                        .font(.system(size: 20, weight: .bold))
-                        .foregroundColor(.white)
+                    .font(.system(size: 20, weight: .bold))
+                    .foregroundColor(.white)
                     
                     Text("\(trip.members.count) members")
                         .font(.system(size: 14))
@@ -61,7 +61,7 @@ struct TripChatView: View {
                 
                 // MESSAGES
                 ScrollViewReader { proxy in
-                    ScrollView {
+                ScrollView {
                         VStack(spacing: 12) {
                             if messageStore.messages.isEmpty {
                                 VStack(spacing: 12) {
@@ -79,7 +79,7 @@ struct TripChatView: View {
                             }
                             
                             ForEach(messageStore.messages) { msg in
-                                MessageBubble(message: msg)
+                            MessageBubble(message: msg)
                                     .id(msg.id)
                             }
                             
@@ -104,8 +104,8 @@ struct TripChatView: View {
                                                             .delay(Double(index) * 0.2),
                                                         value: isAITyping
                                                     )
-                                            }
-                                        }
+                        }
+                    }
                                         .padding(.horizontal, 16)
                                         .padding(.vertical, 12)
                                         .background(
@@ -150,39 +150,39 @@ struct TripChatView: View {
                         .background(Color.white.opacity(0.1))
                     
                     HStack(spacing: 12) {
-                        // Camera button
-                        Button(action: { showImagePicker = true }) {
-                            Image(systemName: "camera.fill")
+                    // Camera button
+                    Button(action: { showImagePicker = true }) {
+                        Image(systemName: "camera.fill")
                                 .foregroundColor(.white.opacity(0.8))
-                                .font(.system(size: 22))
+                            .font(.system(size: 22))
                                 .frame(width: 40, height: 40)
-                        }
-                        
-                        // Mic button
-                        Button(action: toggleRecording) {
-                            Image(systemName: isRecording ? "stop.circle.fill" : "mic.fill")
+                    }
+                    
+                    // Mic button
+                    Button(action: toggleRecording) {
+                        Image(systemName: isRecording ? "stop.circle.fill" : "mic.fill")
                                 .foregroundColor(isRecording ? .red : .white.opacity(0.8))
-                                .font(.system(size: 22))
+                            .font(.system(size: 22))
                                 .frame(width: 40, height: 40)
-                        }
-                        
-                        // TextField
-                        TextField("Type an expense note…", text: $inputText)
+                    }
+                    
+                    // TextField
+                    TextField("Type an expense note…", text: $inputText)
                             .padding(.horizontal, 16)
                             .padding(.vertical, 12)
                             .background(cardColor)
                             .cornerRadius(24)
-                            .foregroundColor(.white)
+                        .foregroundColor(.white)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 24)
                                     .stroke(Color.white.opacity(0.1), lineWidth: 1)
                             )
-                        
-                        // Send button
-                        Button(action: sendTextMessage) {
-                            Image(systemName: "paperplane.fill")
+                    
+                    // Send button
+                    Button(action: sendTextMessage) {
+                        Image(systemName: "paperplane.fill")
                                 .foregroundColor(inputText.isEmpty ? .white.opacity(0.3) : accentGreen)
-                                .font(.system(size: 22))
+                            .font(.system(size: 22))
                                 .frame(width: 40, height: 40)
                         }
                         .disabled(inputText.isEmpty)

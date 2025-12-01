@@ -86,7 +86,7 @@ struct MessageBubble: View {
             }
             
             if !message.isFromAI {
-                Spacer()
+            Spacer()
             }
         }
     }
