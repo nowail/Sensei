@@ -49,7 +49,6 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
-				Untitled.swift,
 			);
 			target = D75EFCBD2EDCC56A005B936F /* Sensei */;
 		};

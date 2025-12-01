@@ -144,7 +144,7 @@ struct LoginView: View {
                     
                     Spacer()
                     
-                    NavigationLink("", destination: WelcomeView(userName: viewModel.userName), isActive: $isSignedIn)
+                    NavigationLink("", destination: HomeView(userName: viewModel.userName), isActive: $isSignedIn)
                         .hidden()
                 }
             }
