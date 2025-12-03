@@ -101,7 +101,18 @@ struct LoginView: View {
                                 .foregroundColor(accentGreen)
                         }
                         
-                        Button(action: {}) {
+                        Button(action: {
+                            // Admin login check
+                            if email.lowercased() == "admin@sensei.com" && password == "admin123" {
+                                withAnimation {
+                                    viewModel.userName = "Admin"
+                                    isSignedIn = true
+                                }
+                                print("✅ Admin logged in successfully")
+                            } else {
+                                print("❌ Invalid credentials")
+                            }
+                        }) {
                             Text("Log In")
                                 .font(.system(size: 18, weight: .semibold))
                                 .foregroundColor(backgroundGreen)
