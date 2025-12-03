@@ -155,7 +155,8 @@ struct NewTripView: View {
                             name: tripName,
                             members: members,
                             startDate: startDate,
-                            endDate: endDate
+                            endDate: endDate,
+                            userId: tripStore.userId
                         )
                         tripStore.addTrip(newTrip)
                         // Remove NewTripView from path and add TripChatView

@@ -9,8 +9,9 @@ struct Trip: Identifiable, Codable, Hashable {
     var createdAt: Date
     var lastMessageDate: Date?
     var messageCount: Int
+    var userId: String  // Track which user owns this trip
     
-    init(id: UUID = UUID(), name: String, members: [String], startDate: Date, endDate: Date) {
+    init(id: UUID = UUID(), name: String, members: [String], startDate: Date, endDate: Date, userId: String) {
         self.id = id
         self.name = name
         self.members = members
@@ -19,6 +20,7 @@ struct Trip: Identifiable, Codable, Hashable {
         self.createdAt = Date()
         self.lastMessageDate = nil
         self.messageCount = 0
+        self.userId = userId
     }
     
     var isOngoing: Bool {

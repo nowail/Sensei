@@ -5,11 +5,13 @@ import GoogleSignIn
 class AuthViewModel: ObservableObject {
 
     @Published var user: User?
-    @Published var userName: String = ""   // ← NEW
+    @Published var userName: String = ""
+    @Published var userId: String = ""  // Track current user ID
     
     init() {
         self.user = Auth.auth().currentUser
         self.userName = user?.displayName ?? ""
+        self.userId = user?.email ?? user?.uid ?? ""
     }
     
     // Single Google sign-in function with completion
@@ -51,6 +53,7 @@ class AuthViewModel: ObservableObject {
                 self.user = authResult?.user
                 // Prefer Firebase displayName, fall back to Google profile name
                 self.userName = authResult?.user.displayName ?? user.profile?.name ?? "User"
+                self.userId = authResult?.user.email ?? authResult?.user.uid ?? ""
                 
                 print("✅ SUCCESS: User is signed in:", authResult?.user.email ?? "")
                 completion(true)

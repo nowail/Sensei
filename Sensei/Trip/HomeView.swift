@@ -7,8 +7,15 @@ enum NavigationDestination: Hashable {
 
 struct HomeView: View {
     let userName: String
-    @StateObject private var tripStore = TripStore()
+    let userId: String
+    @StateObject private var tripStore: TripStore
     @State private var navigationPath = NavigationPath()
+    
+    init(userName: String, userId: String) {
+        self.userName = userName
+        self.userId = userId
+        _tripStore = StateObject(wrappedValue: TripStore(userId: userId))
+    }
     
     // Colors
     let bgGradient = LinearGradient(
@@ -218,5 +225,5 @@ extension HomeView {
 }
 
 #Preview {
-    HomeView(userName: "Pehlaj")
+    HomeView(userName: "Pehlaj", userId: "test@example.com")
 }

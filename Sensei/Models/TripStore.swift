@@ -4,14 +4,20 @@ import Combine
 class TripStore: ObservableObject {
     @Published var trips: [Trip] = []
     
-    private let userDefaultsKey = "SavedTrips"
+    let userId: String
+    private var userDefaultsKey: String {
+        "SavedTrips_\(userId)"
+    }
     
-    init() {
+    init(userId: String) {
+        self.userId = userId
         loadTrips()
     }
     
     func addTrip(_ trip: Trip) {
-        trips.append(trip)
+        var newTrip = trip
+        newTrip.userId = userId  // Ensure trip belongs to current user
+        trips.append(newTrip)
         saveTrips()
     }
     

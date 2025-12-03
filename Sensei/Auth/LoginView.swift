@@ -70,7 +70,7 @@ struct LoginView: View {
     var body: some View {
         Group {
             if isSignedIn {
-                HomeView(userName: viewModel.userName)
+                HomeView(userName: viewModel.userName, userId: viewModel.userId)
             } else {
         NavigationStack {
             ZStack {
@@ -106,6 +106,7 @@ struct LoginView: View {
                             if email.lowercased() == "admin@sensei.com" && password == "admin123" {
                                 withAnimation {
                                     viewModel.userName = "Admin"
+                                    viewModel.userId = "admin@sensei.com"
                                     isSignedIn = true
                                 }
                                 print("✅ Admin logged in successfully")
