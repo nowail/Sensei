@@ -17,18 +17,6 @@ struct HomeView: View {
         _tripStore = StateObject(wrappedValue: TripStore(userId: userId))
     }
     
-    // Colors
-    let bgGradient = LinearGradient(
-        colors: [
-            Color(#colorLiteral(red: 0.02, green: 0.05, blue: 0.04, alpha: 1)),
-            Color(#colorLiteral(red: 0.07, green: 0.12, blue: 0.11, alpha: 1))
-        ],
-        startPoint: .top, endPoint: .bottom
-    )
-    
-    let cardColor = Color(#colorLiteral(red: 0.10, green: 0.15, blue: 0.13, alpha: 1))
-    let glowGreen = Color(#colorLiteral(red: 0.40, green: 0.80, blue: 0.65, alpha: 1))
-
     var body: some View {
         NavigationStack(path: $navigationPath) {
             ZStack {
@@ -96,8 +84,25 @@ struct HomeView: View {
                     TripChatView(trip: trip, tripStore: tripStore, navigationPath: $navigationPath)
                 }
             }
+            .onAppear {
+                Task {
+                    await tripStore.loadTrips()
+                }
+            }
         }
     }
+    
+    // Colors
+    let bgGradient = LinearGradient(
+        colors: [
+            Color(#colorLiteral(red: 0.02, green: 0.05, blue: 0.04, alpha: 1)),
+            Color(#colorLiteral(red: 0.07, green: 0.12, blue: 0.11, alpha: 1))
+        ],
+        startPoint: .top, endPoint: .bottom
+    )
+    
+    let cardColor = Color(#colorLiteral(red: 0.10, green: 0.15, blue: 0.13, alpha: 1))
+    let glowGreen = Color(#colorLiteral(red: 0.40, green: 0.80, blue: 0.65, alpha: 1))
 }
 
 extension HomeView {

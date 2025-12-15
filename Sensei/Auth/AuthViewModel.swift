@@ -55,6 +55,21 @@ class AuthViewModel: ObservableObject {
                 self.userName = authResult?.user.displayName ?? user.profile?.name ?? "User"
                 self.userId = authResult?.user.email ?? authResult?.user.uid ?? ""
                 
+                // Create/update user in Supabase
+                if let email = authResult?.user.email {
+                    Task {
+                        do {
+                            try await SupabaseService.shared.upsertUser(
+                                email: email,
+                                name: self.userName
+                            )
+                            print("✅ User synced to Supabase: \(email)")
+                        } catch {
+                            print("⚠️ Error syncing user to Supabase: \(error)")
+                        }
+                    }
+                }
+                
                 print("✅ SUCCESS: User is signed in:", authResult?.user.email ?? "")
                 completion(true)
             }

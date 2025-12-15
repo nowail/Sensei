@@ -215,7 +215,9 @@ struct TripChatView: View {
         messageStore.saveMessage(userChatMessage, for: trip.id)
         
         // Add to ongoing trips when message is sent
-        tripStore.addMessageToTrip(tripId: trip.id)
+        Task {
+            await tripStore.addMessageToTrip(tripId: trip.id)
+        }
         
         // Get AI response
         Task {
@@ -271,7 +273,9 @@ struct TripChatView: View {
     func handleImageMessage(_ img: UIImage) {
         let imageMessage = ChatMessage(type: .image(img), isFromAI: false)
         messageStore.saveMessage(imageMessage, for: trip.id)
-        tripStore.addMessageToTrip(tripId: trip.id)
+        Task {
+            await tripStore.addMessageToTrip(tripId: trip.id)
+        }
     }
     
     // AUDIO RECORDING
@@ -309,7 +313,9 @@ struct TripChatView: View {
         if let url = audioRecorder?.url {
             let audioMessage = ChatMessage(type: .audio(url), isFromAI: false)
             messageStore.saveMessage(audioMessage, for: trip.id)
-            tripStore.addMessageToTrip(tripId: trip.id)
+            Task {
+                await tripStore.addMessageToTrip(tripId: trip.id)
+            }
         }
     }
 }

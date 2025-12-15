@@ -102,16 +102,40 @@ struct LoginView: View {
                         }
                         
                         Button(action: {
-                            // Admin login check
-                            if email.lowercased() == "admin@sensei.com" && password == "admin123" {
+                            // Default test user login
+                            let defaultEmail = "test@sensei.com"
+                            let defaultPassword = "test123"
+                            
+                            // Trim whitespace and compare
+                            let trimmedEmail = email.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+                            let trimmedPassword = password.trimmingCharacters(in: .whitespacesAndNewlines)
+                            
+                            print("🔍 Login attempt - Email: '\(trimmedEmail)', Password: '\(trimmedPassword)'")
+                            print("🔍 Expected - Email: '\(defaultEmail)', Password: '\(defaultPassword)'")
+                            
+                            if trimmedEmail == defaultEmail && trimmedPassword == defaultPassword {
                                 withAnimation {
-                                    viewModel.userName = "Admin"
-                                    viewModel.userId = "admin@sensei.com"
+                                    viewModel.userName = "Test User"
+                                    viewModel.userId = defaultEmail
                                     isSignedIn = true
                                 }
-                                print("✅ Admin logged in successfully")
+                                
+                                // Create/update user in Supabase
+                                Task {
+                                    do {
+                                        try await SupabaseService.shared.upsertUser(
+                                            email: defaultEmail,
+                                            name: "Test User"
+                                        )
+                                        print("✅ Test user synced to Supabase: \(defaultEmail)")
+                                    } catch {
+                                        print("⚠️ Error syncing test user to Supabase: \(error)")
+                                    }
+                                }
+                                
+                                print("✅ Test user logged in successfully")
                             } else {
-                                print("❌ Invalid credentials")
+                                print("❌ Invalid credentials - Email match: \(trimmedEmail == defaultEmail), Password match: \(trimmedPassword == defaultPassword)")
                             }
                         }) {
                             Text("Log In")

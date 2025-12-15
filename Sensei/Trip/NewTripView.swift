@@ -158,13 +158,17 @@ struct NewTripView: View {
                             endDate: endDate,
                             userId: tripStore.userId
                         )
-                        tripStore.addTrip(newTrip)
-                        // Remove NewTripView from path and add TripChatView
-                        // This ensures we don't go back to NewTripView
-                        if !navigationPath.isEmpty {
-                            navigationPath.removeLast()
+                        Task {
+                            await tripStore.addTrip(newTrip)
+                            // Remove NewTripView from path and add TripChatView
+                            // This ensures we don't go back to NewTripView
+                            await MainActor.run {
+                                if !navigationPath.isEmpty {
+                                    navigationPath.removeLast()
+                                }
+                                navigationPath.append(NavigationDestination.tripChat(newTrip))
+                            }
                         }
-                        navigationPath.append(NavigationDestination.tripChat(newTrip))
                     } label: {
                         Text("Create Trip")
                             .font(.system(size: 18, weight: .bold))
