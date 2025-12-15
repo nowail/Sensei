@@ -3,11 +3,18 @@ import Foundation
 class AIService {
     static let shared = AIService()
     
-    private var provider: AIProvider
+    private var _provider: AIProvider?
+    private var provider: AIProvider {
+        if let existing = _provider {
+            return existing
+        }
+        let newProvider = AIService.createProvider()
+        _provider = newProvider
+        return newProvider
+    }
     
     private init() {
-        // Initialize with the configured provider
-        self.provider = AIService.createProvider()
+        // Lazy initialization - provider will be created on first use
     }
     
     // Factory method to create the appropriate provider
@@ -20,7 +27,8 @@ class AIService {
             )
         case .openAI:
             guard AIConfig.openAIAPIKey != "YOUR_OPENAI_API_KEY" && !AIConfig.openAIAPIKey.isEmpty else {
-                fatalError("OpenAI API key not configured")
+                // Return a mock provider that shows an error message instead of crashing
+                return ErrorProvider(errorMessage: "OpenAI API key not configured. Please set OPENAI_API_KEY environment variable or update AIConfig.swift")
             }
             return OpenAIProvider(
                 apiKey: AIConfig.openAIAPIKey,
@@ -40,5 +48,18 @@ enum AIError: Error {
     case apiError(String)
     case parseError(String)
     case invalidAPIKey
+}
+
+// MARK: - Error Provider (for when API key is missing)
+class ErrorProvider: AIProvider {
+    let errorMessage: String
+    
+    init(errorMessage: String) {
+        self.errorMessage = errorMessage
+    }
+    
+    func sendMessage(_ userMessage: String, conversationHistory: [ChatMessage], systemPrompt: String) async throws -> String {
+        throw AIError.invalidAPIKey
+    }
 }
 

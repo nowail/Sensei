@@ -11,6 +11,11 @@ import SwiftUI
 struct SenseiApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     let persistenceController = PersistenceController.shared
+    
+    init() {
+        // Load .env file on app startup
+        _ = EnvLoader.shared
+    }
 
     var body: some Scene {
             WindowGroup {

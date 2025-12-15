@@ -5,18 +5,25 @@ import UIKit
 class SupabaseService {
     static let shared = SupabaseService()
     
-    private let client: SupabaseClient
-    
-    private init() {
+    private var _client: SupabaseClient?
+    private var client: SupabaseClient {
+        if let existing = _client {
+            return existing
+        }
         guard SupabaseConfig.supabaseURL != "YOUR_SUPABASE_URL",
               SupabaseConfig.supabaseAnonKey != "YOUR_SUPABASE_ANON_KEY" else {
             fatalError("Supabase configuration missing. Please set SUPABASE_URL and SUPABASE_ANON_KEY environment variables or update SupabaseConfig.swift")
         }
         
-        self.client = SupabaseClient(
+        let newClient = SupabaseClient(
             supabaseURL: URL(string: SupabaseConfig.supabaseURL)!,
             supabaseKey: SupabaseConfig.supabaseAnonKey
         )
+        _client = newClient
+        return newClient
+    }
+    
+    private init() {
     }
     
     // MARK: - User Operations
@@ -67,10 +74,14 @@ class SupabaseService {
     func insertTrip(_ trip: Trip, userEmail: String) async throws {
         let dbTrip = DatabaseTrip.from(trip: trip, userEmail: userEmail)
         
+        print("🔍 Inserting trip to Supabase: \(dbTrip.name), userEmail: \(dbTrip.userEmail)")
+        
         try await client.database
             .from("trips")
             .insert(dbTrip)
             .execute()
+        
+        print("✅ Trip inserted successfully")
     }
     
     /// Update an existing trip
@@ -114,10 +125,14 @@ class SupabaseService {
     func insertMessage(_ message: ChatMessage, tripId: UUID) async throws {
         let dbMessage = DatabaseMessage.from(message: message, tripId: tripId)
         
+        print("🔍 Inserting message to Supabase: tripId=\(tripId), type=\(dbMessage.messageType)")
+        
         try await client.database
             .from("messages")
             .insert(dbMessage)
             .execute()
+        
+        print("✅ Message inserted successfully")
     }
 }
 

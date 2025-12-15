@@ -8,7 +8,7 @@ struct AIConfig {
     // - .ollama (FREE - runs locally on your Mac)
     // - .openAI (PAID - but high quality)
     
-    static let providerType: ProviderType = .openAI  // 👈 Using OpenAI
+    static let providerType: ProviderType = .openAI  // 👈 Using OpenAI - API key loaded from .env file or environment variable
     
     // ============================================
     // OLLAMA CONFIGURATION (FREE - Local)
@@ -25,8 +25,12 @@ struct AIConfig {
     // Set your API key as an environment variable: OPENAI_API_KEY
     // Or create a local AIConfig.local.swift file (gitignored) with your key
     static var openAIAPIKey: String {
-        // First try environment variable
+        // First try environment variable (from Xcode scheme)
         if let envKey = ProcessInfo.processInfo.environment["OPENAI_API_KEY"], !envKey.isEmpty {
+            return envKey
+        }
+        // Then try .env file
+        if let envKey = EnvLoader.shared.get("OPENAI_API_KEY"), !envKey.isEmpty {
             return envKey
         }
         // Fallback to empty string - user must set it

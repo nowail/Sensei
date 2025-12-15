@@ -49,8 +49,19 @@ class ChatMessageStore: ObservableObject {
         do {
             try context.save()
             messages.append(message)
+            print("✅ Message saved locally")
         } catch {
-            print("Error saving message: \(error)")
+            print("❌ Error saving message locally: \(error)")
+        }
+        
+        // Sync to Supabase
+        Task {
+            do {
+                try await SupabaseService.shared.insertMessage(message, tripId: tripId)
+                print("✅ Message synced to Supabase")
+            } catch {
+                print("❌ Error syncing message to Supabase: \(error)")
+            }
         }
     }
     

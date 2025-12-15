@@ -20,13 +20,17 @@ class TripStore: ObservableObject {
         var newTrip = trip
         newTrip.userId = userId  // Ensure trip belongs to current user
         
+        print("🔍 Adding trip: \(newTrip.name), userEmail: \(userEmail), userId: \(userId)")
+        
         do {
             try await SupabaseService.shared.insertTrip(newTrip, userEmail: userEmail)
+            print("✅ Trip added to Supabase successfully")
             await MainActor.run {
                 trips.append(newTrip)
             }
         } catch {
             print("❌ Error adding trip to Supabase: \(error)")
+            print("❌ Error details: \(error.localizedDescription)")
             // Fallback to local storage
             await MainActor.run {
                 trips.append(newTrip)
