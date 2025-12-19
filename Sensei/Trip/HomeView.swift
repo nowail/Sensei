@@ -3,6 +3,7 @@ import SwiftUI
 enum NavigationDestination: Hashable {
     case newTrip
     case tripChat(Trip)
+    case map
 }
 
 struct HomeView: View {
@@ -68,6 +69,13 @@ struct HomeView: View {
                             }
                         }
                         
+                        // MARK: - Map Button
+                        Button {
+                            navigationPath.append(NavigationDestination.map)
+                        } label: {
+                            mapButtonCard
+                        }
+                        
                         // MARK: - AI Suggestions
                         aiSuggestionBox
                         
@@ -82,6 +90,8 @@ struct HomeView: View {
                     NewTripView(tripStore: tripStore, navigationPath: $navigationPath)
                 case .tripChat(let trip):
                     TripChatView(trip: trip, tripStore: tripStore, navigationPath: $navigationPath)
+                case .map:
+                    MapScreen()
                 }
             }
             .onAppear {
@@ -208,6 +218,35 @@ extension HomeView {
         .padding()
         .background(cardColor.opacity(0.8))
         .cornerRadius(14)
+    }
+    
+    // MARK: Map Button Card
+    var mapButtonCard: some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("View Map")
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundColor(.white)
+                
+                Text("See your location & nearby places")
+                    .foregroundColor(.white.opacity(0.5))
+                    .font(.system(size: 14))
+            }
+            Spacer()
+            
+            ZStack {
+                Circle()
+                    .fill(Color.white.opacity(0.06))
+                    .frame(width: 46, height: 46)
+                Image(systemName: "map.fill")
+                    .foregroundColor(.white)
+                    .font(.system(size: 20, weight: .medium))
+            }
+        }
+        .padding()
+        .background(cardColor)
+        .cornerRadius(18)
+        .shadow(color: glowGreen.opacity(0.15), radius: 20, x: 0, y: 8)
     }
     
     // MARK: AI Suggestion Box

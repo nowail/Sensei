@@ -27,6 +27,17 @@
     
     <key>NSContactsUsageDescription</key>
     <string>This app uses your contacts to add trip members.</string>
+    
+    <!-- Location permissions for Google Maps -->
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Sensei needs your location to show your position on the map and provide location-based travel recommendations.</string>
+    
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>Sensei needs your location to provide real-time travel updates and safety features even when the app is in the background.</string>
+    
+    <!-- Google Maps API Key -->
+    <key>GMSApiKey</key>
+    <string>AIzaSyBVpOgSsJqCXW6uJCL2h19-NJipB7fQrZM</string>
 
     <!-- REQUIRED by Google Sign-In (CLIENT_ID from GoogleService-Info.plist) -->
     <key>GIDClientID</key>

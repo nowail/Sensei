@@ -1,6 +1,7 @@
 import UIKit
 import FirebaseCore
 import GoogleSignIn
+import GoogleMaps
 
 class AppDelegate: NSObject, UIApplicationDelegate {
 
@@ -8,6 +9,16 @@ class AppDelegate: NSObject, UIApplicationDelegate {
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
 
         FirebaseApp.configure()
+        
+        // Initialize Google Maps
+        if let apiKey = Bundle.main.object(forInfoDictionaryKey: "GMSApiKey") as? String {
+            GMSServices.provideAPIKey(apiKey)
+        } else if let path = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist"),
+                  let plist = NSDictionary(contentsOfFile: path),
+                  let apiKey = plist["API_KEY"] as? String {
+            GMSServices.provideAPIKey(apiKey)
+        }
+        
         return true
     }
 

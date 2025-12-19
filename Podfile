@@ -11,6 +11,8 @@ target 'Sensei' do
   pod 'Firebase/Analytics'
   pod 'Firebase/Core'
   pod 'GoogleSignIn'
+  pod 'GoogleMaps'
+  pod 'GooglePlaces'
  
   target 'SenseiTests' do
     inherit! :search_paths
