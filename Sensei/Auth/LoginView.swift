@@ -70,7 +70,7 @@ struct LoginView: View {
     var body: some View {
         Group {
             if isSignedIn {
-                HomeView(userName: viewModel.userName, userId: viewModel.userId)
+                MainTabView(userName: viewModel.userName, userId: viewModel.userId)
             } else {
         NavigationStack {
             ZStack {
