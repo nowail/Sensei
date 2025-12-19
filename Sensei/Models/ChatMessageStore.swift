@@ -57,10 +57,16 @@ class ChatMessageStore: ObservableObject {
         // Sync to Supabase
         Task {
             do {
+                print("🔍 Attempting to sync message to Supabase: tripId=\(tripId), messageId=\(message.id)")
                 try await SupabaseService.shared.insertMessage(message, tripId: tripId)
-                print("✅ Message synced to Supabase")
+                print("✅ Message synced to Supabase successfully")
             } catch {
                 print("❌ Error syncing message to Supabase: \(error)")
+                print("❌ Error type: \(type(of: error))")
+                if let nsError = error as NSError? {
+                    print("❌ Error domain: \(nsError.domain), code: \(nsError.code)")
+                    print("❌ Error userInfo: \(nsError.userInfo)")
+                }
             }
         }
     }

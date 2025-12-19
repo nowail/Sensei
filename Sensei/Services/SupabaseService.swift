@@ -1,5 +1,6 @@
 import Foundation
 import Supabase
+import PostgREST
 import UIKit
 
 class SupabaseService {
@@ -125,14 +126,33 @@ class SupabaseService {
     func insertMessage(_ message: ChatMessage, tripId: UUID) async throws {
         let dbMessage = DatabaseMessage.from(message: message, tripId: tripId)
         
-        print("🔍 Inserting message to Supabase: tripId=\(tripId), type=\(dbMessage.messageType)")
+        print("🔍 Inserting message to Supabase:")
+        print("   - tripId: \(tripId)")
+        print("   - messageId: \(dbMessage.id)")
+        print("   - type: \(dbMessage.messageType)")
+        print("   - content: \(dbMessage.content ?? "nil")")
+        print("   - isFromAI: \(dbMessage.isFromAI)")
+        print("   - timestamp: \(dbMessage.timestamp)")
         
-        try await client.database
-            .from("messages")
-            .insert(dbMessage)
-            .execute()
-        
-        print("✅ Message inserted successfully")
+        do {
+            let response = try await client.database
+                .from("messages")
+                .insert(dbMessage)
+                .execute()
+            
+            print("✅ Message inserted successfully")
+            print("   - Response: \(response)")
+        } catch {
+            print("❌ Failed to insert message:")
+            print("   - Error: \(error)")
+            print("   - Error type: \(type(of: error))")
+            if let postgrestError = error as? PostgrestError {
+                print("   - PostgrestError code: \(postgrestError.code ?? "nil")")
+                print("   - PostgrestError message: \(postgrestError.message)")
+                print("   - PostgrestError detail: \(postgrestError.detail ?? "nil")")
+            }
+            throw error
+        }
     }
 }
 
