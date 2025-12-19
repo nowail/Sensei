@@ -76,6 +76,7 @@ struct MapViewContainer: View {
                 .ignoresSafeArea()
             
             // Permission prompt overlay
+            // Use onChange to update UI based on authorization changes (not synchronous check)
             if locationManager.authorizationStatus == .notDetermined {
                 VStack(spacing: 16) {
                     Image(systemName: "location.fill")
@@ -152,10 +153,20 @@ struct MapViewContainer: View {
             }
         }
         .onAppear {
-            locationManager.startUpdatingLocation()
+            // Request permission - the delegate callback will handle starting location updates
+            // Don't check authorizationStatus here - it will be updated by the callback
+            locationManager.requestPermission()
         }
         .onDisappear {
             locationManager.stopUpdatingLocation()
+        }
+        .onChange(of: locationManager.authorizationStatus) { newStatus in
+            // When permission is granted via callback, start location updates
+            if newStatus == .authorizedWhenInUse || newStatus == .authorizedAlways {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    locationManager.startUpdatingLocation()
+                }
+            }
         }
     }
 }

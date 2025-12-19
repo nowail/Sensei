@@ -20,85 +20,94 @@ struct HomeView: View {
     
     var body: some View {
         NavigationStack(path: $navigationPath) {
-            ZStack {
-                bgGradient.ignoresSafeArea()
-                
-                ScrollView(showsIndicators: false) {
-                    VStack(alignment: .leading, spacing: 24) {
-                        
-                        // MARK: - Welcome Heading
-                        Text("Welcome, \(userName) 👋")
-                            .font(.system(size: 32, weight: .bold))
-                            .foregroundColor(.white)
-                            .padding(.top, 20)
-                        
-                        // MARK: - Start New Trip Card
-                        Button {
-                            navigationPath.append(NavigationDestination.newTrip)
-                        } label: {
-                            startTripCard
-                        }
-                        
-                        // MARK: - Ongoing Trips
-                        if !tripStore.ongoingTrips.isEmpty {
+            homeContent
+                .navigationDestination(for: NavigationDestination.self) { destination in
+                    destinationView(for: destination)
+                }
+                .onAppear {
+                    Task {
+                        await tripStore.loadTrips()
+                    }
+                }
+        }
+    }
+    
+    private var homeContent: some View {
+        ZStack {
+            bgGradient.ignoresSafeArea()
+            
+            ScrollView(showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 24) {
+                    
+                    // MARK: - Welcome Heading
+                    Text("Welcome, \(userName) 👋")
+                        .font(.system(size: 32, weight: .bold))
+                        .foregroundColor(.white)
+                        .padding(.top, 20)
+                    
+                    // MARK: - Start New Trip Card
+                    Button {
+                        navigationPath.append(NavigationDestination.newTrip)
+                    } label: {
+                        startTripCard
+                    }
+                    
+                    // MARK: - Ongoing Trips
+                    if !tripStore.ongoingTrips.isEmpty {
                         Text("Ongoing Trips")
                             .font(.system(size: 20, weight: .semibold))
                             .foregroundColor(.white.opacity(0.8))
                         
-                            ForEach(tripStore.ongoingTrips) { trip in
-                                Button {
-                                    navigationPath.append(NavigationDestination.tripChat(trip))
-                                } label: {
-                                    ongoingTripCardView(trip: trip)
-                                }
+                        ForEach(tripStore.ongoingTrips) { trip in
+                            Button {
+                                navigationPath.append(NavigationDestination.tripChat(trip))
+                            } label: {
+                                ongoingTripCardView(trip: trip)
                             }
                         }
-                        
-                        // MARK: - Past Trips
-                        if !tripStore.pastTrips.isEmpty {
+                    }
+                    
+                    // MARK: - Past Trips
+                    if !tripStore.pastTrips.isEmpty {
                         Text("Past Trips")
                             .font(.system(size: 20, weight: .semibold))
                             .foregroundColor(.white.opacity(0.8))
                         
-                            ForEach(tripStore.pastTrips) { trip in
-                                Button {
-                                    navigationPath.append(NavigationDestination.tripChat(trip))
-                                } label: {
-                                    pastTripRow(name: trip.name)
-                                }
+                        ForEach(tripStore.pastTrips) { trip in
+                            Button {
+                                navigationPath.append(NavigationDestination.tripChat(trip))
+                            } label: {
+                                pastTripRow(name: trip.name)
                             }
                         }
-                        
-                        // MARK: - Map Button
-                        Button {
-                            navigationPath.append(NavigationDestination.map)
-                        } label: {
-                            mapButtonCard
-                        }
-                        
-                        // MARK: - AI Suggestions
-                        aiSuggestionBox
-                        
-                        Spacer().frame(height: 40)
                     }
-                    .padding(.horizontal, 20)
+                    
+                    // MARK: - Map Button
+                    Button {
+                        navigationPath.append(NavigationDestination.map)
+                    } label: {
+                        mapButtonCard
+                    }
+                    
+                    // MARK: - AI Suggestions
+                    aiSuggestionBox
+                    
+                    Spacer().frame(height: 40)
                 }
+                .padding(.horizontal, 20)
             }
-            .navigationDestination(for: NavigationDestination.self) { destination in
-                switch destination {
-                case .newTrip:
-                    NewTripView(tripStore: tripStore, navigationPath: $navigationPath)
-                case .tripChat(let trip):
-                    TripChatView(trip: trip, tripStore: tripStore, navigationPath: $navigationPath)
-                case .map:
-                    MapScreen()
-                }
-            }
-            .onAppear {
-                Task {
-                    await tripStore.loadTrips()
-                }
-            }
+        }
+    }
+    
+    @ViewBuilder
+    private func destinationView(for destination: NavigationDestination) -> some View {
+        switch destination {
+        case .newTrip:
+            NewTripView(tripStore: tripStore, navigationPath: $navigationPath)
+        case .tripChat(let trip):
+            TripChatView(trip: trip, tripStore: tripStore, navigationPath: $navigationPath)
+        case .map:
+            MapScreen()
         }
     }
     

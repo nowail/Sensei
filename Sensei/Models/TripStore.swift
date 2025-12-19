@@ -33,7 +33,7 @@ class TripStore: ObservableObject {
             print("❌ Error details: \(error.localizedDescription)")
             // Fallback to local storage
             await MainActor.run {
-                trips.append(newTrip)
+        trips.append(newTrip)
                 saveTripsLocally()
             }
         }
@@ -51,8 +51,8 @@ class TripStore: ObservableObject {
             print("❌ Error updating trip in Supabase: \(error)")
             // Fallback to local storage
             await MainActor.run {
-                if let index = trips.firstIndex(where: { $0.id == trip.id }) {
-                    trips[index] = trip
+        if let index = trips.firstIndex(where: { $0.id == trip.id }) {
+            trips[index] = trip
                 }
                 saveTripsLocally()
             }
@@ -61,9 +61,9 @@ class TripStore: ObservableObject {
     
     func addMessageToTrip(tripId: UUID) async {
         await MainActor.run {
-            if let index = trips.firstIndex(where: { $0.id == tripId }) {
-                trips[index].messageCount += 1
-                trips[index].lastMessageDate = Date()
+        if let index = trips.firstIndex(where: { $0.id == tripId }) {
+            trips[index].messageCount += 1
+            trips[index].lastMessageDate = Date()
             }
         }
         

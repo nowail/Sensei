@@ -160,13 +160,13 @@ struct NewTripView: View {
                         )
                         Task {
                             await tripStore.addTrip(newTrip)
-                            // Remove NewTripView from path and add TripChatView
-                            // This ensures we don't go back to NewTripView
+                        // Remove NewTripView from path and add TripChatView
+                        // This ensures we don't go back to NewTripView
                             await MainActor.run {
-                                if !navigationPath.isEmpty {
-                                    navigationPath.removeLast()
-                                }
-                                navigationPath.append(NavigationDestination.tripChat(newTrip))
+                        if !navigationPath.isEmpty {
+                            navigationPath.removeLast()
+                        }
+                        navigationPath.append(NavigationDestination.tripChat(newTrip))
                             }
                         }
                     } label: {
