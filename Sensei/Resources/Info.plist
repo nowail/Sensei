@@ -37,7 +37,7 @@
     
     <!-- Google Maps API Key -->
     <key>GMSApiKey</key>
-    <string>AIzaSyBbFhV5j-AZ0llvlMRc3PXORwDypQBrVA8</string>
+    <string>AIzaSyCTWlAY6mg8skwoZyAPmdAJklx-GQd9yDU</string>
 
     <!-- REQUIRED by Google Sign-In (CLIENT_ID from GoogleService-Info.plist) -->
     <key>GIDClientID</key>

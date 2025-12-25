@@ -19,7 +19,9 @@ struct SenseiApp: App {
 
     var body: some Scene {
             WindowGroup {
-                LoginView()
+                // TEMPORARY: Start directly from Dashboard (skip login)
+                // TODO: Revert to LoginView() when done testing
+                MainTabView(userName: "Test User", userId: "test@sensei.com")
                     .environment(\.managedObjectContext, persistenceController.container.viewContext)
             }
         }

@@ -41,10 +41,10 @@ struct MainTabView: View {
                 }
                 .tag(0)
             
-            // Personal Expenses Tab
-            PersonalExpensesView(userId: userId)
+            // Plan Trip Tab
+            PlanTripView()
                 .tabItem {
-                    Label("Expenses", systemImage: "creditcard.fill")
+                    Label("Plan Trip", systemImage: "map.fill")
                 }
                 .tag(1)
             

@@ -42,6 +42,49 @@ class AIService {
         
         return try await provider.sendMessage(userMessage, conversationHistory: conversationHistory, systemPrompt: systemPrompt)
     }
+    
+    func generateItinerary(location: String, numberOfDays: Int, priceRange: String, genres: [String]) async throws -> String {
+        let genresText = genres.joined(separator: ", ")
+        let prompt = """
+        Create a detailed \(numberOfDays)-day travel itinerary for \(location) with a \(priceRange) budget. 
+        Trip style: \(genresText).
+        
+        Format the response as a JSON object with this exact structure:
+        {
+          "days": [
+            {
+              "dayNumber": 1,
+              "activities": [
+                {
+                  "name": "Activity name",
+                  "description": "Brief description",
+                  "time": "09:00 AM",
+                  "location": "Full address or location name",
+                  "category": "Restaurant/Attraction/Hotel/Activity"
+                }
+              ]
+            }
+          ]
+        }
+        
+        Include 3-4 activities per day covering meals, attractions, and experiences. Keep descriptions brief (1 sentence). Make it realistic and enjoyable.
+        Return ONLY valid JSON, no additional text or markdown.
+        """
+        
+        let systemPrompt = "You are an expert travel planner. Generate concise, practical itineraries in JSON format only. Always return valid JSON without markdown code blocks or additional text. Keep responses under 1500 tokens."
+        
+        // Use OpenAI provider directly with optimized token limit for faster generation
+        if let openAIProvider = provider as? OpenAIProvider {
+            return try await openAIProvider.sendMessageWithTokens(
+                prompt,
+                conversationHistory: [],
+                systemPrompt: systemPrompt,
+                maxTokens: 1500
+            )
+        }
+        
+        return try await provider.sendMessage(prompt, conversationHistory: [], systemPrompt: systemPrompt)
+    }
 }
 
 enum AIError: Error {
