@@ -10,6 +10,31 @@ class TripStore: ObservableObject {
         userId.contains("@") ? userId : "" // Use email if available
     }
     
+    // Track trips that are currently generating background images to prevent duplicates
+    // Use a serial queue for thread-safe access
+    private let imageGenerationQueue = DispatchQueue(label: "com.sensei.imageGeneration")
+    private var _generatingImages: Set<UUID> = []
+    private var generatingImages: Set<UUID> {
+        get {
+            return imageGenerationQueue.sync { _generatingImages }
+        }
+        set {
+            imageGenerationQueue.sync { _generatingImages = newValue }
+        }
+    }
+    
+    private func insertGeneratingImage(_ tripId: UUID) {
+        imageGenerationQueue.sync { _generatingImages.insert(tripId) }
+    }
+    
+    private func removeGeneratingImage(_ tripId: UUID) {
+        imageGenerationQueue.sync { _generatingImages.remove(tripId) }
+    }
+    
+    private func containsGeneratingImage(_ tripId: UUID) -> Bool {
+        return imageGenerationQueue.sync { _generatingImages.contains(tripId) }
+    }
+    
     init(userId: String) {
         self.userId = userId
         Task {
@@ -29,6 +54,11 @@ class TripStore: ObservableObject {
             await MainActor.run {
                 trips.append(newTrip)
             }
+            
+            // Generate background image for the new trip
+            Task {
+                await generateBackgroundImage(for: newTrip.id)
+            }
         } catch {
             print("❌ Error adding trip to Supabase: \(error)")
             print("❌ Error details: \(error.localizedDescription)")
@@ -37,7 +67,124 @@ class TripStore: ObservableObject {
         trips.append(newTrip)
                 saveTripsLocally()
             }
+            
+            // Still generate background image even if Supabase save failed
+            Task {
+                await generateBackgroundImage(for: newTrip.id)
+            }
         }
+    }
+    
+    // Generate background image for a trip (only once per trip)
+    func generateBackgroundImage(for tripId: UUID) async {
+        // Check if already generating or already has image
+        if containsGeneratingImage(tripId) {
+            print("⏳ Background image already being generated for this trip")
+            return
+        }
+        
+        // Safely access trips array on main actor
+        let trip: Trip? = await MainActor.run {
+            return trips.first(where: { $0.id == tripId })
+        }
+        
+        guard let trip = trip else {
+            print("⚠️ Trip not found for image generation")
+            return
+        }
+        
+        // Skip if image already exists
+        if trip.backgroundImageData != nil {
+            print("✅ Trip already has background image, skipping generation")
+            return
+        }
+        
+        // Mark as generating to prevent duplicate requests
+        insertGeneratingImage(tripId)
+        defer {
+            removeGeneratingImage(tripId)
+        }
+        
+        // Extract country from trip name
+        let country = extractCountryFromTripName(trip.name)
+        print("🎨 Generating background image for trip: \(trip.name), country: \(country)")
+        
+        do {
+            let generatedImage = try await AIService.shared.generateImage(for: country)
+            print("✅ Background image generated successfully")
+            
+            // Convert image to data and update trip
+            if let imageData = generatedImage.jpegData(compressionQuality: 0.8) {
+                var updatedTrip = trip
+                updatedTrip.backgroundImageData = imageData
+                
+                // Update in store and database
+                await updateTrip(updatedTrip)
+                print("✅ Trip background image saved - will not regenerate")
+            }
+        } catch {
+            print("⚠️ Error generating background image: \(error)")
+        }
+    }
+    
+    // Extract country name from trip name
+    private func extractCountryFromTripName(_ tripName: String) -> String {
+        // Get all country names from LocationDataProvider
+        let allCountries = LocationDataProvider.shared.countries.map { $0.name }
+        
+        // Try common patterns first (flags)
+        let patterns = [
+            "🇹🇷": "Turkey",
+            "🇯🇵": "Japan",
+            "🇫🇷": "France",
+            "🇮🇹": "Italy",
+            "🇪🇸": "Spain",
+            "🇬🇧": "United Kingdom",
+            "🇩🇪": "Germany",
+            "🇨🇦": "Canada",
+            "🇺🇸": "United States",
+            "🇦🇺": "Australia",
+            "🇧🇷": "Brazil",
+            "🇲🇽": "Mexico",
+            "🇮🇳": "India",
+            "🇨🇳": "China",
+            "🇰🇷": "South Korea",
+            "🇹🇭": "Thailand",
+            "🇸🇬": "Singapore",
+            "🇬🇷": "Greece",
+            "🇵🇹": "Portugal",
+            "🇳🇱": "Netherlands",
+            "🇵🇰": "Pakistan"
+        ]
+        
+        for (flag, country) in patterns {
+            if tripName.contains(flag) {
+                return country
+            }
+        }
+        
+        // Try to find a country name in the trip name
+        for country in allCountries {
+            if tripName.localizedCaseInsensitiveContains(country) {
+                return country
+            }
+        }
+        
+        // Handle patterns like "Tokyo Japan" or "Paris, France" - check last word/component
+        let components = tripName.components(separatedBy: CharacterSet(charactersIn: ", "))
+        for component in components.reversed() {
+            let trimmed = component.trimmingCharacters(in: .whitespacesAndNewlines)
+            for country in allCountries {
+                if trimmed.localizedCaseInsensitiveContains(country) || country.localizedCaseInsensitiveContains(trimmed) {
+                    return country
+                }
+            }
+        }
+        
+        // Default fallback
+        let cleaned = tripName.replacingOccurrences(of: "Trip", with: "", options: .caseInsensitive)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        return cleaned.isEmpty ? "Travel Destination" : cleaned
     }
     
     func updateTrip(_ trip: Trip) async {
@@ -113,10 +260,24 @@ class TripStore: ObservableObject {
         do {
             let fetchedTrips = try await SupabaseService.shared.fetchTrips(userEmail: userEmail)
             trips = fetchedTrips
+            
+            // Generate background images for trips that don't have them
+            for trip in trips where trip.backgroundImageData == nil {
+                Task {
+                    await generateBackgroundImage(for: trip.id)
+                }
+            }
         } catch {
             print("❌ Error loading trips from Supabase: \(error)")
             // Fallback to local storage
             loadTripsLocally()
+            
+            // Generate background images for trips that don't have them
+            for trip in trips where trip.backgroundImageData == nil {
+                Task {
+                    await generateBackgroundImage(for: trip.id)
+                }
+            }
         }
     }
     

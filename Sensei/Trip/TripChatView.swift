@@ -52,27 +52,58 @@ struct TripChatView: View {
                 Button {
                     showTripDetail = true
                 } label: {
-                    HStack {
-                        VStack(spacing: 4) {
-                            Text(trip.name)
-                                .font(.system(size: 20, weight: .bold))
-                                .foregroundColor(.white)
-                            
-                            Text("\(trip.members.count) members")
-                                .font(.system(size: 14))
-                                .foregroundColor(.white.opacity(0.6))
+                    ZStack(alignment: .leading) {
+                        // Background Image
+                        if let backgroundImage = trip.backgroundImage {
+                            GeometryReader { geometry in
+                                Image(uiImage: backgroundImage)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: geometry.size.width, height: geometry.size.height)
+                                    .clipped()
+                            }
+                            .overlay(
+                                // Dark gradient overlay for text readability
+                                LinearGradient(
+                                    colors: [
+                                        Color.black.opacity(0.0),
+                                        Color.black.opacity(0.7)
+                                    ],
+                                    startPoint: .top,
+                                    endPoint: .bottom
+                                )
+                            )
+                        } else {
+                            // Fallback to solid color if no image
+                            cardColor.opacity(0.5)
                         }
                         
-                        Spacer()
-                        
-                        Image(systemName: "chevron.right")
-                            .foregroundColor(.white.opacity(0.5))
-                            .font(.system(size: 14))
+                        // Content
+                        HStack {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(trip.name)
+                                    .font(.system(size: 20, weight: .bold))
+                                    .foregroundColor(.white)
+                                    .shadow(color: .black.opacity(0.5), radius: 4, x: 0, y: 2)
+                                
+                                Text("\(trip.members.count) members")
+                                    .font(.system(size: 14))
+                                    .foregroundColor(.white.opacity(0.9))
+                                    .shadow(color: .black.opacity(0.3), radius: 2)
+                            }
+                            
+                            Spacer()
+                            
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(.white.opacity(0.8))
+                                .font(.system(size: 14))
+                                .shadow(color: .black.opacity(0.3), radius: 2)
+                        }
+                        .padding(.vertical, 16)
+                        .padding(.horizontal, 16)
                     }
-                    .padding(.vertical, 16)
-                    .padding(.horizontal, 16)
+                    .frame(height: 80)
                     .frame(maxWidth: .infinity)
-                    .background(cardColor.opacity(0.5))
                 }
                 .buttonStyle(PlainButtonStyle())
                 
@@ -141,14 +172,17 @@ struct TripChatView: View {
                                 }
                                 .id("ai-typing")
                             }
+                            
                         }
                         .padding(.horizontal, 16)
                         .padding(.vertical, 20)
                     }
                     .onChange(of: messageStore.messages.count) { _ in
                         if let lastMessage = messageStore.messages.last {
-                            withAnimation {
-                                proxy.scrollTo(lastMessage.id, anchor: .bottom)
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                withAnimation {
+                                    proxy.scrollTo(lastMessage.id, anchor: .bottom)
+                                }
                             }
                         }
                     }

@@ -182,6 +182,7 @@ struct DatabaseTrip: Codable {
     let createdAt: Date
     let lastMessageDate: Date?
     let messageCount: Int
+    let backgroundImageData: Data?
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -193,6 +194,7 @@ struct DatabaseTrip: Codable {
         case createdAt = "created_at"
         case lastMessageDate = "last_message_date"
         case messageCount = "message_count"
+        case backgroundImageData = "background_image_data"
     }
     
     static func from(trip: Trip, userEmail: String) -> DatabaseTrip {
@@ -205,7 +207,8 @@ struct DatabaseTrip: Codable {
             userEmail: userEmail,
             createdAt: trip.createdAt,
             lastMessageDate: trip.lastMessageDate,
-            messageCount: trip.messageCount
+            messageCount: trip.messageCount,
+            backgroundImageData: trip.backgroundImageData
         )
     }
     
@@ -218,7 +221,8 @@ struct DatabaseTrip: Codable {
             members: members,
             startDate: startDate,
             endDate: endDate,
-            userId: userEmail
+            userId: userEmail,
+            backgroundImageData: backgroundImageData
         )
         // Restore additional properties that aren't in init
         trip.createdAt = createdAt

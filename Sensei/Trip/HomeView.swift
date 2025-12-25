@@ -85,7 +85,7 @@ struct HomeView: View {
                             Button {
                                 navigationPath.append(NavigationDestination.tripChat(trip))
                             } label: {
-                                pastTripRow(name: trip.name)
+                                pastTripRow(trip: trip)
                             }
                         }
                     }
@@ -188,33 +188,69 @@ extension HomeView {
     
     // MARK: Card — Ongoing Trip View
     func ongoingTripCardView(trip: Trip) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(trip.name)
-                .foregroundColor(.white)
-                .font(.system(size: 18, weight: .medium))
-            
-            HStack(spacing: 12) {
-                if trip.messageCount > 0 {
-                    Text("\(trip.messageCount) messages")
-                        .foregroundColor(.white.opacity(0.7))
-                        .font(.system(size: 14))
+        ZStack(alignment: .leading) {
+            // Background Image
+            if let backgroundImage = trip.backgroundImage {
+                GeometryReader { geometry in
+                    Image(uiImage: backgroundImage)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: geometry.size.width, height: geometry.size.height)
+                        .clipped()
                 }
-                
-                if let lastMessageDate = trip.lastMessageDate {
-                    Text(formatDate(lastMessageDate))
-                        .foregroundColor(.white.opacity(0.5))
-                        .font(.system(size: 12))
-                }
+                .overlay(
+                    // Dark gradient overlay for text readability
+                    LinearGradient(
+                        colors: [
+                            Color.black.opacity(0.0),
+                            Color.black.opacity(0.6)
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+            } else {
+                // Fallback to solid color if no image
+                cardColor
             }
             
-            Text("\(trip.members.count) members")
-                .foregroundColor(glowGreen.opacity(0.8))
-                .font(.system(size: 14, weight: .medium))
+            // Content
+            VStack(alignment: .leading, spacing: 6) {
+                Text(trip.name)
+                    .foregroundColor(.white)
+                    .font(.system(size: 20, weight: .bold))
+                    .shadow(color: .black.opacity(0.5), radius: 4, x: 0, y: 2)
+                
+                HStack(spacing: 12) {
+                    if trip.messageCount > 0 {
+                        Text("\(trip.messageCount) messages")
+                            .foregroundColor(.white.opacity(0.9))
+                            .font(.system(size: 14))
+                            .shadow(color: .black.opacity(0.3), radius: 2)
+                    }
+                    
+                    if let lastMessageDate = trip.lastMessageDate {
+                        Text(formatDate(lastMessageDate))
+                            .foregroundColor(.white.opacity(0.8))
+                            .font(.system(size: 12))
+                            .shadow(color: .black.opacity(0.3), radius: 2)
+                    }
+                }
+                
+                Text("\(trip.members.count) members")
+                    .foregroundColor(glowGreen)
+                    .font(.system(size: 14, weight: .semibold))
+                    .shadow(color: .black.opacity(0.3), radius: 2)
+            }
+            .padding()
         }
-        .padding()
-        .background(cardColor)
-        .cornerRadius(16)
-        .shadow(color: .black.opacity(0.2), radius: 10, y: 4)
+        .frame(height: 140)
+        .cornerRadius(20)
+        .shadow(color: .black.opacity(0.3), radius: 12, y: 6)
+        .overlay(
+            RoundedRectangle(cornerRadius: 20)
+                .stroke(Color.white.opacity(0.1), lineWidth: 1)
+        )
     }
     
     func formatDate(_ date: Date) -> String {
@@ -225,18 +261,51 @@ extension HomeView {
     }
     
     // MARK: Past Trip Row
-    func pastTripRow(name: String) -> some View {
-        HStack {
-            Text(name)
-                .foregroundColor(.white)
-                .font(.system(size: 16))
-            Spacer()
-            Image(systemName: "chevron.right")
-                .foregroundColor(.white.opacity(0.4))
+    func pastTripRow(trip: Trip) -> some View {
+        ZStack(alignment: .leading) {
+            // Background Image
+            if let backgroundImage = trip.backgroundImage {
+                GeometryReader { geometry in
+                    Image(uiImage: backgroundImage)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: geometry.size.width, height: geometry.size.height)
+                        .clipped()
+                }
+                .overlay(
+                    // Dark gradient overlay for text readability
+                    LinearGradient(
+                        colors: [
+                            Color.black.opacity(0.0),
+                            Color.black.opacity(0.5)
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+            } else {
+                // Fallback to solid color if no image
+                cardColor.opacity(0.8)
+            }
+            
+            // Content
+            HStack {
+                Text(trip.name)
+                    .foregroundColor(.white)
+                    .font(.system(size: 16, weight: .medium))
+                    .shadow(color: .black.opacity(0.3), radius: 2)
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .foregroundColor(.white.opacity(0.7))
+            }
+            .padding()
         }
-        .padding()
-        .background(cardColor.opacity(0.8))
+        .frame(height: 60)
         .cornerRadius(14)
+        .overlay(
+            RoundedRectangle(cornerRadius: 14)
+                .stroke(Color.white.opacity(0.1), lineWidth: 1)
+        )
     }
     
     // MARK: Map Button Card

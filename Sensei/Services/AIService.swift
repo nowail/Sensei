@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 class AIService {
     static let shared = AIService()
@@ -84,6 +85,19 @@ class AIService {
         }
         
         return try await provider.sendMessage(prompt, conversationHistory: [], systemPrompt: systemPrompt)
+    }
+    
+    // Generate an AI image based on country/location
+    func generateImage(for country: String, prompt: String? = nil) async throws -> UIImage {
+        guard let openAIProvider = provider as? OpenAIProvider else {
+            throw AIError.apiError("Image generation is only available with OpenAI provider")
+        }
+        
+        // Create a descriptive prompt for the image
+        let imagePrompt = prompt ?? "Beautiful travel scene from \(country), showing iconic landmarks, vibrant streets, and local culture. Modern, high-quality travel photography style, warm colors, professional composition, cinematic lighting."
+        
+        print("🎨 Generating image with prompt: \(imagePrompt)")
+        return try await openAIProvider.generateImage(prompt: imagePrompt)
     }
 }
 

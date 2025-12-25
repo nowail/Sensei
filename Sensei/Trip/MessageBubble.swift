@@ -61,16 +61,33 @@ struct MessageBubble: View {
                         )
                     
                 case .image(let img):
-                    Image(uiImage: img)
-                        .resizable()
-                        .scaledToFit()
-                        .frame(maxHeight: 200)
-                        .cornerRadius(16)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 16)
-                                .stroke(accentGreen.opacity(0.2), lineWidth: 1)
-                        )
-                        .shadow(color: .black.opacity(0.2), radius: 8, y: 4)
+                    VStack(alignment: .leading, spacing: 8) {
+                        // Label for AI-generated images
+                        if !message.isFromAI {
+                            HStack(spacing: 4) {
+                                Image(systemName: "sparkles")
+                                    .font(.system(size: 10))
+                                Text("AI Generated")
+                                    .font(.system(size: 11, weight: .medium))
+                            }
+                            .foregroundColor(accentGreen.opacity(0.8))
+                        }
+                        
+                        Image(uiImage: img)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxHeight: 250)
+                            .cornerRadius(20)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(
+                                        message.isFromAI ? aiColor.opacity(0.3) : accentGreen.opacity(0.3),
+                                        lineWidth: 1.5
+                                    )
+                            )
+                            .shadow(color: .black.opacity(0.3), radius: 12, y: 6)
+                    }
+                    .padding(.horizontal, 4)
                 
                 case .audio(let url):
                     AudioMessagePlayer(url: url)
