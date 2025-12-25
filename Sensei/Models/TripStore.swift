@@ -107,23 +107,42 @@ class TripStore: ObservableObject {
         
         // Extract country from trip name
         let country = extractCountryFromTripName(trip.name)
-        print("🎨 Generating background image for trip: \(trip.name), country: \(country)")
+        print("📸 Fetching background image for trip: \(trip.name), country: \(country)")
+        
+        // Use trip ID hash to ensure different images for same country across different trips
+        let tripIdHash = abs(trip.id.hashValue) % 100 // Get a number 0-99 for variation
+        let pageNumber = (tripIdHash % 10) + 1 // Page 1-10 based on trip ID
         
         do {
-            let generatedImage = try await AIService.shared.generateImage(for: country)
-            print("✅ Background image generated successfully")
+            let fetchedImage = try await PexelsImageService.shared.fetchTravelImage(for: country, page: pageNumber)
+            print("✅ Background image fetched successfully from Pexels")
             
             // Convert image to data and update trip
-            if let imageData = generatedImage.jpegData(compressionQuality: 0.8) {
+            // Use lower compression for faster processing (0.7 instead of 0.8)
+            if let imageData = fetchedImage.jpegData(compressionQuality: 0.7) {
                 var updatedTrip = trip
                 updatedTrip.backgroundImageData = imageData
                 
                 // Update in store and database
                 await updateTrip(updatedTrip)
+                
+                // Update the trips array directly to trigger UI update without reloading
+                await MainActor.run {
+                    if let index = trips.firstIndex(where: { $0.id == tripId }) {
+                        trips[index] = updatedTrip
+                    }
+                }
+                
                 print("✅ Trip background image saved - will not regenerate")
             }
         } catch {
-            print("⚠️ Error generating background image: \(error)")
+            print("⚠️ Error fetching background image from Pexels: \(error)")
+            if let imageError = error as? ImageServiceError {
+                print("⚠️ Error details: \(imageError.localizedDescription)")
+            } else {
+                print("⚠️ Error type: \(type(of: error))")
+                print("⚠️ Error description: \(error.localizedDescription)")
+            }
         }
     }
     
@@ -261,10 +280,30 @@ class TripStore: ObservableObject {
             let fetchedTrips = try await SupabaseService.shared.fetchTrips(userEmail: userEmail)
             trips = fetchedTrips
             
-            // Generate background images for trips that don't have them
-            for trip in trips where trip.backgroundImageData == nil {
-                Task {
-                    await generateBackgroundImage(for: trip.id)
+            // Only generate background images for trips that don't have them
+            // Process in parallel (up to 3 at a time) for faster loading
+            let tripsNeedingImages = trips.filter { $0.backgroundImageData == nil }
+            if !tripsNeedingImages.isEmpty {
+                print("📸 Found \(tripsNeedingImages.count) trips needing background images")
+                
+                // Process in batches of 3 for faster loading while respecting rate limits
+                let batchSize = 3
+                for i in stride(from: 0, to: tripsNeedingImages.count, by: batchSize) {
+                    let batch = Array(tripsNeedingImages[i..<min(i + batchSize, tripsNeedingImages.count)])
+                    
+                    // Fetch images in parallel for this batch
+                    await withTaskGroup(of: Void.self) { group in
+                        for trip in batch {
+                            group.addTask {
+                                await self.generateBackgroundImage(for: trip.id)
+                            }
+                        }
+                    }
+                    
+                    // Small delay between batches to avoid rate limiting
+                    if i + batchSize < tripsNeedingImages.count {
+                        try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 second delay between batches
+                    }
                 }
             }
         } catch {
@@ -272,10 +311,29 @@ class TripStore: ObservableObject {
             // Fallback to local storage
             loadTripsLocally()
             
-            // Generate background images for trips that don't have them
-            for trip in trips where trip.backgroundImageData == nil {
-                Task {
-                    await generateBackgroundImage(for: trip.id)
+            // Only generate background images for trips that don't have them
+            let tripsNeedingImages = trips.filter { $0.backgroundImageData == nil }
+            if !tripsNeedingImages.isEmpty {
+                print("📸 Found \(tripsNeedingImages.count) trips needing background images (local)")
+                
+                // Process in batches of 3 for faster loading while respecting rate limits
+                let batchSize = 3
+                for i in stride(from: 0, to: tripsNeedingImages.count, by: batchSize) {
+                    let batch = Array(tripsNeedingImages[i..<min(i + batchSize, tripsNeedingImages.count)])
+                    
+                    // Fetch images in parallel for this batch
+                    await withTaskGroup(of: Void.self) { group in
+                        for trip in batch {
+                            group.addTask {
+                                await self.generateBackgroundImage(for: trip.id)
+                            }
+                        }
+                    }
+                    
+                    // Small delay between batches to avoid rate limiting
+                    if i + batchSize < tripsNeedingImages.count {
+                        try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 second delay between batches
+                    }
                 }
             }
         }

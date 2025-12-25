@@ -79,28 +79,28 @@ struct TripChatView: View {
                         }
                         
                         // Content
-                        HStack {
+                    HStack {
                             VStack(alignment: .leading, spacing: 4) {
-                                Text(trip.name)
-                                    .font(.system(size: 20, weight: .bold))
-                                    .foregroundColor(.white)
+                            Text(trip.name)
+                                .font(.system(size: 20, weight: .bold))
+                                .foregroundColor(.white)
                                     .shadow(color: .black.opacity(0.5), radius: 4, x: 0, y: 2)
-                                
-                                Text("\(trip.members.count) members")
-                                    .font(.system(size: 14))
+                            
+                            Text("\(trip.members.count) members")
+                                .font(.system(size: 14))
                                     .foregroundColor(.white.opacity(0.9))
                                     .shadow(color: .black.opacity(0.3), radius: 2)
-                            }
-                            
-                            Spacer()
-                            
-                            Image(systemName: "chevron.right")
-                                .foregroundColor(.white.opacity(0.8))
-                                .font(.system(size: 14))
-                                .shadow(color: .black.opacity(0.3), radius: 2)
                         }
-                        .padding(.vertical, 16)
-                        .padding(.horizontal, 16)
+                        
+                        Spacer()
+                        
+                        Image(systemName: "chevron.right")
+                                .foregroundColor(.white.opacity(0.8))
+                            .font(.system(size: 14))
+                                .shadow(color: .black.opacity(0.3), radius: 2)
+                    }
+                    .padding(.vertical, 16)
+                    .padding(.horizontal, 16)
                     }
                     .frame(height: 80)
                     .frame(maxWidth: .infinity)
@@ -180,8 +180,8 @@ struct TripChatView: View {
                     .onChange(of: messageStore.messages.count) { _ in
                         if let lastMessage = messageStore.messages.last {
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                withAnimation {
-                                    proxy.scrollTo(lastMessage.id, anchor: .bottom)
+                            withAnimation {
+                                proxy.scrollTo(lastMessage.id, anchor: .bottom)
                                 }
                             }
                         }

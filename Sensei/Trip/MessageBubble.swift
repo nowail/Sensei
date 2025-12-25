@@ -73,18 +73,18 @@ struct MessageBubble: View {
                             .foregroundColor(accentGreen.opacity(0.8))
                         }
                         
-                        Image(uiImage: img)
-                            .resizable()
-                            .scaledToFit()
+                    Image(uiImage: img)
+                        .resizable()
+                        .scaledToFit()
                             .frame(maxHeight: 250)
                             .cornerRadius(20)
-                            .overlay(
+                        .overlay(
                                 RoundedRectangle(cornerRadius: 20)
                                     .stroke(
                                         message.isFromAI ? aiColor.opacity(0.3) : accentGreen.opacity(0.3),
                                         lineWidth: 1.5
                                     )
-                            )
+                        )
                             .shadow(color: .black.opacity(0.3), radius: 12, y: 6)
                     }
                     .padding(.horizontal, 4)

@@ -27,11 +27,15 @@ struct HomeView: View {
                     destinationView(for: destination)
                 }
                 .onAppear {
-                    Task {
-                        await tripStore.loadTrips()
+                    // Only load trips if we don't have any, or refresh categories
+                    if tripStore.trips.isEmpty {
+                        Task {
+                            await tripStore.loadTrips()
+                        }
+                    } else {
+                        // Just refresh categories, don't reload trips (prevents glitching)
+                        tripStore.refreshTripCategories()
                     }
-                    // Refresh trip categories immediately and periodically
-                    tripStore.refreshTripCategories()
                     startRefreshTimer()
                 }
                 .onDisappear {
@@ -215,34 +219,34 @@ extension HomeView {
             }
             
             // Content
-            VStack(alignment: .leading, spacing: 6) {
-                Text(trip.name)
-                    .foregroundColor(.white)
+        VStack(alignment: .leading, spacing: 6) {
+            Text(trip.name)
+                .foregroundColor(.white)
                     .font(.system(size: 20, weight: .bold))
                     .shadow(color: .black.opacity(0.5), radius: 4, x: 0, y: 2)
-                
-                HStack(spacing: 12) {
-                    if trip.messageCount > 0 {
-                        Text("\(trip.messageCount) messages")
+            
+            HStack(spacing: 12) {
+                if trip.messageCount > 0 {
+                    Text("\(trip.messageCount) messages")
                             .foregroundColor(.white.opacity(0.9))
-                            .font(.system(size: 14))
+                        .font(.system(size: 14))
                             .shadow(color: .black.opacity(0.3), radius: 2)
-                    }
-                    
-                    if let lastMessageDate = trip.lastMessageDate {
-                        Text(formatDate(lastMessageDate))
-                            .foregroundColor(.white.opacity(0.8))
-                            .font(.system(size: 12))
-                            .shadow(color: .black.opacity(0.3), radius: 2)
-                    }
                 }
                 
-                Text("\(trip.members.count) members")
+                if let lastMessageDate = trip.lastMessageDate {
+                    Text(formatDate(lastMessageDate))
+                            .foregroundColor(.white.opacity(0.8))
+                        .font(.system(size: 12))
+                            .shadow(color: .black.opacity(0.3), radius: 2)
+                }
+            }
+            
+            Text("\(trip.members.count) members")
                     .foregroundColor(glowGreen)
                     .font(.system(size: 14, weight: .semibold))
                     .shadow(color: .black.opacity(0.3), radius: 2)
-            }
-            .padding()
+        }
+        .padding()
         }
         .frame(height: 140)
         .cornerRadius(20)
@@ -289,13 +293,13 @@ extension HomeView {
             }
             
             // Content
-            HStack {
+        HStack {
                 Text(trip.name)
-                    .foregroundColor(.white)
+                .foregroundColor(.white)
                     .font(.system(size: 16, weight: .medium))
                     .shadow(color: .black.opacity(0.3), radius: 2)
-                Spacer()
-                Image(systemName: "chevron.right")
+            Spacer()
+            Image(systemName: "chevron.right")
                     .foregroundColor(.white.opacity(0.7))
             }
             .padding()
