@@ -16,6 +16,8 @@ Package.resolved
 
 # CocoaPods
 Pods/
+Pods/**/*
+!Pods/.gitkeep
 
 # Carthage
 Carthage/Build/
