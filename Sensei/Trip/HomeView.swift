@@ -3,6 +3,7 @@ import SwiftUI
 enum NavigationDestination: Hashable {
     case newTrip
     case tripChat(Trip)
+    case tripDetail(Trip)
     case map
 }
 
@@ -11,6 +12,7 @@ struct HomeView: View {
     let userId: String
     @StateObject private var tripStore: TripStore
     @State private var navigationPath = NavigationPath()
+    @State private var refreshTimer: Timer?
     
     init(userName: String, userId: String) {
         self.userName = userName
@@ -28,6 +30,12 @@ struct HomeView: View {
                     Task {
                         await tripStore.loadTrips()
                     }
+                    // Refresh trip categories immediately and periodically
+                    tripStore.refreshTripCategories()
+                    startRefreshTimer()
+                }
+                .onDisappear {
+                    stopRefreshTimer()
                 }
         }
     }
@@ -106,6 +114,8 @@ struct HomeView: View {
             NewTripView(tripStore: tripStore, navigationPath: $navigationPath)
         case .tripChat(let trip):
             TripChatView(trip: trip, tripStore: tripStore, navigationPath: $navigationPath)
+        case .tripDetail(let trip):
+            TripDetailView(trip: trip, tripStore: tripStore, navigationPath: $navigationPath)
         case .map:
             MapScreen()
         }
@@ -274,6 +284,19 @@ extension HomeView {
         .background(cardColor)
         .cornerRadius(16)
         .shadow(color: glowGreen.opacity(0.1), radius: 15, y: 6)
+    }
+    
+    // MARK: - Refresh Timer
+    private func startRefreshTimer() {
+        // Refresh every minute to check if trips should move to "Past"
+        refreshTimer = Timer.scheduledTimer(withTimeInterval: 60.0, repeats: true) { _ in
+            tripStore.refreshTripCategories()
+        }
+    }
+    
+    private func stopRefreshTimer() {
+        refreshTimer?.invalidate()
+        refreshTimer = nil
     }
 }
 

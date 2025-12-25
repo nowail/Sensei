@@ -27,7 +27,7 @@
     
     <key>NSContactsUsageDescription</key>
     <string>This app uses your contacts to add trip members.</string>
-    
+
     <!-- Location permissions for Google Maps -->
     <key>NSLocationWhenInUseUsageDescription</key>
     <string>Sensei needs your location to show your position on the map and provide location-based travel recommendations.</string>

@@ -6,6 +6,8 @@
 !*.xcworkspace/contents.xcworkspacedata
 *.xcuserstate
 *.xcuserdatad
+**/xcuserdata/
+**/xcuserdatad/
 
 # Swift Package Manager
 .build/

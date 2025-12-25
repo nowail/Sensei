@@ -3,6 +3,7 @@ import Combine
 
 class TripStore: ObservableObject {
     @Published var trips: [Trip] = []
+    @Published var refreshTrigger: Date = Date() // Triggers view refresh when date changes
     
     let userId: String
     private var userEmail: String {
@@ -73,12 +74,38 @@ class TripStore: ObservableObject {
         }
     }
     
+    func deleteTrip(_ trip: Trip) async {
+        do {
+            try await SupabaseService.shared.deleteTrip(tripId: trip.id, userEmail: userEmail)
+            await MainActor.run {
+                trips.removeAll { $0.id == trip.id }
+                saveTripsLocally()
+            }
+            print("✅ Trip deleted successfully")
+        } catch {
+            print("❌ Error deleting trip from Supabase: \(error)")
+            // Still remove from local array
+            await MainActor.run {
+                trips.removeAll { $0.id == trip.id }
+                saveTripsLocally()
+            }
+        }
+    }
+    
     var ongoingTrips: [Trip] {
-        trips.filter { $0.isOngoing && !$0.isPast }
+        _ = refreshTrigger // Access refreshTrigger to trigger recomputation when it changes
+        return trips.filter { $0.isOngoing }
     }
     
     var pastTrips: [Trip] {
-        trips.filter { $0.isPast }
+        _ = refreshTrigger // Access refreshTrigger to trigger recomputation when it changes
+        return trips.filter { $0.isPast }
+    }
+    
+    /// Refreshes the trip categorization by updating the refresh trigger
+    /// This ensures trips move from "Ongoing" to "Past" when dates pass
+    func refreshTripCategories() {
+        refreshTrigger = Date()
     }
     
     @MainActor

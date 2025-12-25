@@ -24,13 +24,18 @@ struct Trip: Identifiable, Codable, Hashable {
     }
     
     var isOngoing: Bool {
-        guard let lastMessageDate = lastMessageDate else {
-            return false // No messages yet, not ongoing
-        }
-        return lastMessageDate > Date().addingTimeInterval(-7 * 24 * 60 * 60) // Active in last 7 days
+        // A trip is ongoing if its end date (calendar day) hasn't passed yet
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let tripEndDay = calendar.startOfDay(for: endDate)
+        return tripEndDay >= today
     }
     
     var isPast: Bool {
-        return endDate < Date()
+        // A trip is past if its end date (calendar day) has passed
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let tripEndDay = calendar.startOfDay(for: endDate)
+        return tripEndDay < today
     }
 }

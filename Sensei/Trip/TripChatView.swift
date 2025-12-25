@@ -2,10 +2,11 @@ import SwiftUI
 import AVFoundation
 import PhotosUI
 import CoreData
+import Combine
 
 struct TripChatView: View {
     
-    let trip: Trip
+    @State private var trip: Trip
     @ObservedObject var tripStore: TripStore
     @Binding var navigationPath: NavigationPath
     
@@ -18,12 +19,14 @@ struct TripChatView: View {
     @State private var audioRecorder: AVAudioRecorder?
     @State private var isRecording = false
     @State private var isAITyping = false
+    @State private var showTripDetail = false
+    @State private var scrollToMessageId: UUID? = nil
     
     let cardColor = Color(#colorLiteral(red: 0.10, green: 0.15, blue: 0.13, alpha: 1))
     let accentGreen = Color(#colorLiteral(red: 0.40, green: 0.80, blue: 0.65, alpha: 1))
     
     init(trip: Trip, tripStore: TripStore, navigationPath: Binding<NavigationPath>) {
-        self.trip = trip
+        self._trip = State(initialValue: trip)
         self.tripStore = tripStore
         self._navigationPath = navigationPath
         // Initialize with a temporary context, will be updated in onAppear
@@ -45,19 +48,33 @@ struct TripChatView: View {
             
             VStack(spacing: 0) {
                 
-                // HEADER
-                VStack(spacing: 4) {
-                    Text(trip.name)
-                    .font(.system(size: 20, weight: .bold))
-                    .foregroundColor(.white)
-                    
-                    Text("\(trip.members.count) members")
-                        .font(.system(size: 14))
-                        .foregroundColor(.white.opacity(0.6))
+                // HEADER - Clickable to open trip details
+                Button {
+                    showTripDetail = true
+                } label: {
+                    HStack {
+                        VStack(spacing: 4) {
+                            Text(trip.name)
+                                .font(.system(size: 20, weight: .bold))
+                                .foregroundColor(.white)
+                            
+                            Text("\(trip.members.count) members")
+                                .font(.system(size: 14))
+                                .foregroundColor(.white.opacity(0.6))
+                        }
+                        
+                        Spacer()
+                        
+                        Image(systemName: "chevron.right")
+                            .foregroundColor(.white.opacity(0.5))
+                            .font(.system(size: 14))
+                    }
+                    .padding(.vertical, 16)
+                    .padding(.horizontal, 16)
+                    .frame(maxWidth: .infinity)
+                    .background(cardColor.opacity(0.5))
                 }
-                .padding(.vertical, 16)
-                .frame(maxWidth: .infinity)
-                .background(cardColor.opacity(0.5))
+                .buttonStyle(PlainButtonStyle())
                 
                 // MESSAGES
                 ScrollViewReader { proxy in
@@ -142,6 +159,18 @@ struct TripChatView: View {
                             }
                         }
                     }
+                    .onChange(of: scrollToMessageId) { messageId in
+                        if let messageId = messageId {
+                            // Wait a moment for the view to update, then scroll
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                withAnimation {
+                                    proxy.scrollTo(messageId, anchor: .center)
+                                }
+                                // Clear the scroll target
+                                scrollToMessageId = nil
+                            }
+                        }
+                    }
                 }
                 
                 // MESSAGE INPUT BAR
@@ -196,10 +225,27 @@ struct TripChatView: View {
         .sheet(isPresented: $showImagePicker) {
             ImagePicker(selectedImage: $selectedImage, onImagePicked: handleImageMessage)
         }
+        .sheet(isPresented: $showTripDetail) {
+            NavigationStack {
+                TripDetailView(trip: trip, tripStore: tripStore, navigationPath: $navigationPath)
+            }
+        }
         .onAppear {
             // Update context to use environment context
             messageStore.context = viewContext
             messageStore.loadMessages(for: trip.id)
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("ScrollToMessage"))) { notification in
+            if let userInfo = notification.userInfo,
+               let messageId = userInfo["messageId"] as? UUID {
+                scrollToMessageId = messageId
+            }
+        }
+        .onChange(of: tripStore.trips) { _ in
+            // Update trip if it was modified in TripDetailView
+            if let updatedTrip = tripStore.trips.first(where: { $0.id == trip.id }) {
+                trip = updatedTrip
+            }
         }
     }
     
