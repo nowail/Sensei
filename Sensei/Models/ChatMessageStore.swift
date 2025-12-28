@@ -31,7 +31,7 @@ class ChatMessageStore: ObservableObject {
         let entity = ChatMessageEntity(context: context)
         entity.id = message.id
         entity.tripId = tripId
-        entity.timestamp = Date()
+        entity.timestamp = message.timestamp
         entity.isFromAI = message.isFromAI
         entity.messageType = message.typeString
         
@@ -44,6 +44,13 @@ class ChatMessageStore: ObservableObject {
         case .audio(let url):
             entity.content = "Audio"
             entity.audioURL = url.absoluteString
+        case .systemEvent(let event):
+            switch event {
+            case .memberAdded(let member, let tripName):
+                entity.content = "SYSTEM:\(member):ADDED:\(tripName)"
+            case .memberRemoved(let member, let tripName):
+                entity.content = "SYSTEM:\(member):REMOVED:\(tripName)"
+            }
         }
         
         do {
@@ -89,6 +96,24 @@ class ChatMessageStore: ObservableObject {
             guard let audioURLString = entity.audioURL,
                   let url = URL(string: audioURLString) else { return nil }
             messageTypeEnum = .audio(url)
+        case "systemEvent":
+            guard let content = entity.content else { return nil }
+            // Parse system event: SYSTEM:memberName:EVENT:tripName
+            let parts = content.components(separatedBy: ":")
+            if parts.count >= 4 && parts[0] == "SYSTEM" {
+                let memberName = parts[1]
+                let eventType = parts[2]
+                let tripName = parts[3]
+                if eventType == "ADDED" {
+                    messageTypeEnum = .systemEvent(.memberAdded(memberName, tripName))
+                } else if eventType == "REMOVED" {
+                    messageTypeEnum = .systemEvent(.memberRemoved(memberName, tripName))
+                } else {
+                    return nil
+                }
+            } else {
+                return nil
+            }
         default:
             return nil
         }

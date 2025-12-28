@@ -339,6 +339,16 @@ struct TripDetailView: View {
                     return false
                 case .audio:
                     return false
+                case .systemEvent(let event):
+                    // Search in system event messages
+                    switch event {
+                    case .memberAdded(let member, let tripName):
+                        return member.localizedCaseInsensitiveContains(trimmedQuery) || 
+                               tripName.localizedCaseInsensitiveContains(trimmedQuery)
+                    case .memberRemoved(let member, let tripName):
+                        return member.localizedCaseInsensitiveContains(trimmedQuery) || 
+                               tripName.localizedCaseInsensitiveContains(trimmedQuery)
+                    }
                 }
             }
         }

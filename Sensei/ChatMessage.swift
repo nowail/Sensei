@@ -18,7 +18,15 @@ struct ChatMessage: Identifiable {
         case .text: return "text"
         case .image: return "image"
         case .audio: return "audio"
+        case .systemEvent: return "systemEvent"
         }
+    }
+    
+    var isSystemMessage: Bool {
+        if case .systemEvent = type {
+            return true
+        }
+        return false
     }
 }
 
@@ -26,4 +34,10 @@ enum MessageType {
     case text(String)
     case image(UIImage)
     case audio(URL)
+    case systemEvent(SystemEventType)
+}
+
+enum SystemEventType {
+    case memberAdded(String, String) // member name, trip name
+    case memberRemoved(String, String) // member name, trip name
 }
