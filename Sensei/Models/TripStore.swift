@@ -147,7 +147,7 @@ class TripStore: ObservableObject {
     }
     
     // Extract country name from trip name
-    private func extractCountryFromTripName(_ tripName: String) -> String {
+    func extractCountryFromTripName(_ tripName: String) -> String {
         // Get all country names from LocationDataProvider
         let allCountries = LocationDataProvider.shared.countries.map { $0.name }
         

@@ -154,6 +154,43 @@ class SupabaseService {
             throw error
         }
     }
+    
+    // MARK: - Country Rules Operations
+    
+    /// Fetch country rules by country name
+    func fetchCountryRules(countryName: String) async throws -> CountryRules? {
+        // Try exact match first
+        var response: [DatabaseCountryRules] = try await client.database
+            .from("country_rules")
+            .select()
+            .eq("country_name", value: countryName)
+            .limit(1)
+            .execute()
+            .value
+        
+        // If no exact match, try case-insensitive search
+        if response.isEmpty {
+            response = try await client.database
+                .from("country_rules")
+                .select()
+                .ilike("country_name", value: "%\(countryName)%")
+                .limit(1)
+                .execute()
+                .value
+        }
+        
+        return response.first?.toCountryRules()
+    }
+    
+    /// Insert or update country rules
+    func upsertCountryRules(_ rules: CountryRules) async throws {
+        let dbRules = DatabaseCountryRules.from(countryRules: rules)
+        
+        try await client.database
+            .from("country_rules")
+            .upsert(dbRules, onConflict: "country_name")
+            .execute()
+    }
 }
 
 // MARK: - Database Models
@@ -271,6 +308,14 @@ struct DatabaseMessage: Codable {
             messageType = "audio"
             audioURL = url.absoluteString
             content = "Audio"
+        case .systemEvent(let event):
+            messageType = "systemEvent"
+            switch event {
+            case .memberAdded(let member, let tripName):
+                content = "SYSTEM:\(member):ADDED:\(tripName)"
+            case .memberRemoved(let member, let tripName):
+                content = "SYSTEM:\(member):REMOVED:\(tripName)"
+            }
         }
         
         return DatabaseMessage(
@@ -302,6 +347,24 @@ struct DatabaseMessage: Codable {
             guard let audioURL = audioURL,
                   let url = URL(string: audioURL) else { return nil }
             chatMessageType = .audio(url)
+        case "systemEvent":
+            guard let content = content else { return nil }
+            // Parse system event: SYSTEM:memberName:EVENT:tripName
+            let parts = content.components(separatedBy: ":")
+            if parts.count >= 4 && parts[0] == "SYSTEM" {
+                let memberName = parts[1]
+                let eventType = parts[2]
+                let tripName = parts[3]
+                if eventType == "ADDED" {
+                    chatMessageType = .systemEvent(.memberAdded(memberName, tripName))
+                } else if eventType == "REMOVED" {
+                    chatMessageType = .systemEvent(.memberRemoved(memberName, tripName))
+                } else {
+                    return nil
+                }
+            } else {
+                return nil
+            }
         default:
             return nil
         }
